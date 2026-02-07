@@ -1,13 +1,6 @@
-/**
- * content/styles.css - 구글 번역 페이지에 주입되는 스타일
- *
- * Stage 1-2: CSS 커스텀 프로퍼티 및 기본 스타일 정의.
- * Stage 3-4에서 추가: 저장 버튼, 토스트 알림 스타일.
+﻿/**
+ * content/styles.css - style injected into Google Translate page
  */
-
-/* ============================================================
-   CSS Custom Properties (Google Material Design 팔레트)
-   ============================================================ */
 
 :root {
   --vocab-primary: #1a73e8;
@@ -25,10 +18,6 @@
   --vocab-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-/* ============================================================
-   주입 요소 기본 스타일 (.vocab- 네임스페이스)
-   ============================================================ */
-
 .vocab-container {
   font-family: var(--vocab-font-family);
   font-size: 14px;
@@ -39,4 +28,65 @@
 
 .vocab-container * {
   box-sizing: border-box;
+}
+
+.vocab-save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--vocab-primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.18s ease, opacity 0.18s ease;
+  z-index: 2147483647;
+}
+
+.vocab-save-btn:hover:not(:disabled) {
+  background: var(--vocab-primary-hover);
+}
+
+.vocab-save-btn:disabled {
+  cursor: default;
+  opacity: 0.9;
+}
+
+.vocab-save-btn--saved {
+  background: var(--vocab-success);
+}
+
+.vocab-save-btn--loading {
+  background: var(--vocab-text-secondary);
+}
+
+.vocab-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--vocab-shadow);
+  z-index: 2147483647;
+  opacity: 1;
+  transition: opacity 0.18s ease;
+}
+
+.vocab-toast--success {
+  background: var(--vocab-success);
+}
+
+.vocab-toast--error {
+  background: var(--vocab-error);
+}
+
+.vocab-toast--fadeout {
+  opacity: 0;
 }

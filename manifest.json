@@ -1,36 +1,36 @@
 {
   "manifest_version": 3,
   "name": "Google Translate Vocabulary Builder",
-  "description": "구글 번역에서 단어를 저장하고 학습하는 크롬 확장 프로그램",
+  "description": "A Chrome extension that saves and learns words from Google Translate.",
   "version": "0.1.0",
-
   "permissions": [
     "storage",
     "activeTab",
     "sidePanel"
   ],
-
   "host_permissions": [
     "https://translate.google.com/*"
   ],
-
   "content_scripts": [
     {
-      "matches": ["https://translate.google.com/*"],
-      "js": ["content/content-script.js"],
-      "css": ["content/styles.css"]
+      "matches": [
+        "https://translate.google.com/*"
+      ],
+      "js": [
+        "content/content-script.js"
+      ],
+      "css": [
+        "content/styles.css"
+      ]
     }
   ],
-
   "background": {
     "service_worker": "background/service-worker.js",
     "type": "module"
   },
-
   "side_panel": {
     "default_path": "sidepanel/index.html"
   },
-
   "action": {
     "default_popup": "popup/index.html",
     "default_icon": {
@@ -39,17 +39,19 @@
       "128": "assets/icons/icon128.png"
     }
   },
-
   "icons": {
     "16": "assets/icons/icon16.png",
     "48": "assets/icons/icon48.png",
     "128": "assets/icons/icon128.png"
   },
-
   "web_accessible_resources": [
     {
-      "resources": ["lib/html_parsing_mapping_table.json"],
-      "matches": ["https://translate.google.com/*"]
+      "resources": [
+        "lib/html_parsing_mapping_table.json"
+      ],
+      "matches": [
+        "https://translate.google.com/*"
+      ]
     }
   ]
 }

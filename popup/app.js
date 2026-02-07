@@ -43,9 +43,13 @@ async function init() {
   }
 
   // 단어장 열기 버튼
-  document.getElementById('openSidePanel').addEventListener('click', () => {
+  document.getElementById('openSidePanel').addEventListener('click', async () => {
     if (chrome.sidePanel) {
-      chrome.sidePanel.open({ windowId: chrome.windows?.WINDOW_ID_CURRENT });
+      // 팝업에서 실행 시 WINDOW_ID_CURRENT(-2)는 유효하지 않을 수 있으므로
+      // 현재 윈도우 정보를 명시적으로 가져옵니다.
+      const currentWindow = await chrome.windows.getCurrent();
+      await chrome.sidePanel.open({ windowId: currentWindow.id });
+      window.close(); // 팝업 닫기
     }
   });
 
