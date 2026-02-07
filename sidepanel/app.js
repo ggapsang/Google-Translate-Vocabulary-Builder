@@ -151,4 +151,15 @@ async function init() {
   switchTab('stats');
 }
 
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== 'local') return;
+  if (activeTab === 'words' && changes.vocabulary_words) {
+    renderWordsTab();
+    return;
+  }
+  if (activeTab === 'stats' && (changes.vocabulary_meta || changes.vocabulary_stats || changes.vocabulary_words)) {
+    renderStatsTab();
+  }
+});
+
 init();
