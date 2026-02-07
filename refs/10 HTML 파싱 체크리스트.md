@@ -58,16 +58,14 @@
 
 **설명**: 사용자가 번역 요청한 원래 문장 (단어가 포함된 전체 문맥)
 **용도**: VocabularyWord.context.original 저장
-**예시**: "Hello, how are you?" (단어 "hello" 검색 시)
+**예시**: "Active ranging sensors continue to be the most popular sensors in mobile robotics. Many ranging sensors have a low price point, and, most importantly, all ranging sensors provide easily interpreted outputs: direct measurements of distance from the robot to objects in its vicinity"
 
 ```
 * 내용: 좌측 입력창의 텍스트
 
-* CSS Selector: #yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div.ccvoYb > div.AxqVh > div.OPPzxe > div > c-wiz > span > span > div > textarea
+* CSS Selector: #yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div.ccvoYb > div.AxqVh > div.OPPzxe > div > c-wiz > span > span > div > div.D5aOJc.vJwDU
 
-* 샘플 HTML: <textarea aria-autocomplete="list" aria-expanded="false" aria-controls="kvLWu" class="er8xn" jsname="BJE2fc" jslog="176025; track:click,input,paste;" autocapitalize="off" autocomplete="off" autocorrect="off" role="combobox" rows="1" spellcheck="false" aria-label="원본 텍스트" jsaction="blur:TP1Wfd; click:R8nDBd; focus:HCeAxb; input:r9XDpf,Gyn8rd; keydown:O0Dsab,RHer4; select:BR6jm,RHer4; paste:puy29d" placeholder="" style="height: 288px;">A number of factors affect the performance of a localization sensor that makes use of the GPS. First, it is important to understand that, because of the specific orbital paths of the GPS satellites, coverage is not geometrically identical in different portions of the Earth and therefore resolution is not uniform.</textarea>
-
-* 참고: 단어만 검색한 경우 word와 동일할 수 있음
+* 샘플 HTML: <div class="D5aOJc vJwDU" jscontroller="ycXvHb" jsname="lKng5e">Active ranging sensors continue to be the most popular sensors in mobile robotics. Many ranging sensors have a low price point, and, most importantly, all ranging sensors provide easily interpreted outputs: direct measurements of distance from the robot to objects in its vicinity.</div>
 ```
 
 ---
@@ -76,7 +74,7 @@
 
 **설명**: 전체 맥락의 번역 결과
 **용도**: VocabularyWord.context.translation 저장
-**예시**: "안녕하세요, 어떻게 지내세요?"
+**예시**: "능동형 거리 측정 센서는 모바일 로봇 분야에서 여전히 가장 인기 있는 센서입니다. 많은 거리 측정 센서가 저렴한 가격대를 유지하고 있으며, 무엇보다 모든 센서가 해석하기 쉬운 출력값을 제공한다는 점이 중요합니다. 즉, 로봇과 주변 물체 사이의 거리를 직접 측정할 수 있습니다."
 
 ```
 * 내용: 좌측에서 두번째 패널널
@@ -94,11 +92,13 @@
 
 **설명**: 비슷한 뜻의 다른 단어들
 **용도**: VocabularyWord.definitions[].synonyms 저장
-**예시**: ["hi", "hey", "greetings"]
+**예시**: [surrounding district , urrounding area, locality ...]
 
 ```
 * 내용: 오른쪽 사이드바 중간
+
 * CSS Selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div.AVg9bf > div.ILf88 > span:nth-child(4)
+  
 * 샘플 HTML: <span class="KorTjc"><ul class="PwrFgb"><li class="e7Qsd" key="0"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">surrounding district </span></li><li class="e7Qsd" key="1"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">surrounding area </span></li><li class="e7Qsd" key="2"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">neighborhood </span></li><li class="e7Qsd" key="3"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">locality </span></li><li class="e7Qsd" key="4"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">locale </span></li><li class="e7Qsd" key="5"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">local area </span></li><li class="e7Qsd" key="6"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">area </span></li><li class="e7Qsd" key="7"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">district </span></li><li class="e7Qsd" key="8"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">region </span></li><li class="e7Qsd" key="9"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">quarter </span></li><li class="e7Qsd" key="10"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">sector </span></li><li class="e7Qsd" key="11"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">territory </span></li><li class="e7Qsd" key="12"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">domain </span></li><li class="e7Qsd" key="13"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">place </span></li><li class="e7Qsd" key="14"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">zone </span></li><li class="e7Qsd" key="15"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">environs </span></li><li class="e7Qsd" key="16"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">surroundings </span></li><li class="e7Qsd" key="17"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">surrounds </span></li><li class="e7Qsd" key="18"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">precincts </span></li><li class="e7Qsd" key="19"><span class="wQegqc" jsaction="JUJgG" jsname="UfD2Hd" role="button" tabindex="0" data-sl="en" lang="en">purlieus </span></li></ul></span>
 
 * 개별 유의어 추출 방법: 
@@ -150,7 +150,7 @@
 
 **설명**: 음성 기호 또는 발음 표기
 **용도**: VocabularyWord.pronunciation 저장
-**예시**: "/həˈloʊ/", "헬로우"
+**예시**: "vəˈsinədē"
 
 ```
 * 내용: 오른쪽 사이드바 상단 중간
