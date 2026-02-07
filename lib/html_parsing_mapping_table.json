@@ -1,0 +1,112 @@
+{
+  "_version": "0.1.0",
+  "_description": "Google Translate DOM 파싱용 CSS 셀렉터 매핑 테이블. Google 번역 DOM 구조 변경 시 이 파일만 수정하면 됩니다.",
+  "_lastVerified": null,
+
+  "dictionaryWord": {
+    "description": "사전 조회 단어",
+    "container": ".m2ySsc",
+    "wordText": ".m2ySsc span[lang]",
+    "dataField": "word"
+  },
+
+  "pronunciation": {
+    "description": "발음 기호",
+    "selector": ".m2ySsc .Mplckd",
+    "dataField": "pronunciation"
+  },
+
+  "partOfSpeech": {
+    "description": "품사 (명사, 동사 등)",
+    "selector": ".WiGTJe.vweeBc",
+    "dataField": "definitions[].pos"
+  },
+
+  "meanings": {
+    "description": "뜻 리스트 (한국어 번역)",
+    "container": "table tbody",
+    "meaningItem": ".EXDvhb",
+    "meaningText": ".ctwFHc",
+    "dataField": "definitions[].meanings[].korean"
+  },
+
+  "englishDefinition": {
+    "description": "영문 정의",
+    "container": ".ILf88",
+    "definitionText": ".ILf88 > div[lang='en']",
+    "dataField": "definitions[].meanings[].english"
+  },
+
+  "exampleSentence": {
+    "description": "사전 제공 예문",
+    "selector": ".EesCWb q",
+    "containerSelector": ".EesCWb",
+    "dataField": "definitions[].meanings[].example"
+  },
+
+  "synonyms": {
+    "description": "유의어 목록",
+    "container": ".KorTjc .PwrFgb",
+    "synonymItem": ".e7Qsd .wQegqc",
+    "dataField": "definitions[].meanings[].synonyms"
+  },
+
+  "sourceText": {
+    "description": "원문 텍스트 (좌측 입력창)",
+    "selector": "textarea.er8xn",
+    "dataField": "context.sourceText"
+  },
+
+  "translatedText": {
+    "description": "번역문 텍스트 (우측 출력)",
+    "selector": "span.HwtZe",
+    "innerTextSelector": ".ryNqvb",
+    "dataField": "context.translatedText"
+  },
+
+  "sourceLanguage": {
+    "description": "원문 언어 탭",
+    "selector": ".ooArgc.Uw5XA",
+    "urlParam": "sl",
+    "dataField": "context.sourceLanguage"
+  },
+
+  "targetLanguage": {
+    "description": "번역 언어 탭",
+    "selector": ".ooArgc.o9YeG",
+    "urlParam": "tl",
+    "dataField": "context.targetLanguage"
+  },
+
+  "noDictionaryInfo": {
+    "description": "사전 정보 없음 표시 (문장 검색 시)",
+    "selector": ".pwKYW",
+    "noDetailText": ".nMhadf",
+    "dataField": "_noDictionary"
+  },
+
+  "_TODO_multiplePartsOfSpeech": {
+    "description": "PLACEHOLDER: 여러 품사 그룹핑 - 'run' 같은 단어의 HTML 구조 확인 필요",
+    "selector": null,
+    "groupSeparator": null
+  },
+
+  "_TODO_multipleDefinitions": {
+    "description": "PLACEHOLDER: 동음이의어 (예: 'bank') - HTML 구조 확인 필요",
+    "selector": null,
+    "orderPreservation": null
+  },
+
+  "_TODO_domTiming": {
+    "description": "PLACEHOLDER: DOM 로딩 타이밍 - 사전 패널 렌더링 대기 시간 측정 필요",
+    "waitTimeMs": null,
+    "useMutationObserver": null
+  },
+
+  "_TODO_classNameStability": {
+    "description": "PLACEHOLDER: 클래스명 난독화 여부, data 속성 대체 셀렉터 확인 필요",
+    "obfuscated": null,
+    "structuralSelectorsAvailable": null,
+    "fallbackDataAttributes": null
+  }
+}

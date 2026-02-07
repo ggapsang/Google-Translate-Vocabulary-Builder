@@ -1,0 +1,149 @@
+/**
+ * popup/styles.css - 팝업 윈도우 스타일
+ * 고정 크기: 350px x 500px (refs/03 UIUX 설계 기반)
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #202124;
+  background-color: #ffffff;
+  width: 350px;
+  min-height: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+:root {
+  --color-primary: #1a73e8;
+  --color-primary-hover: #1557b0;
+  --color-success: #34a853;
+  --color-border: #e0e0e0;
+  --color-surface: #f8f9fa;
+  --color-text-primary: #202124;
+  --color-text-secondary: #5f6368;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+}
+
+.popup {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+
+.popup__header {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.popup__title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.popup__count {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================================
+   Section
+   ============================================================ */
+
+.popup__section {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.popup__section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.popup__stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.popup__stat-label {
+  color: var(--color-text-secondary);
+}
+
+.popup__stat-value {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ============================================================
+   Word List
+   ============================================================ */
+
+.popup__word-list {
+  list-style: none;
+}
+
+.popup__word-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-surface);
+  font-size: 13px;
+}
+
+.popup__word-list-empty {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--space-3) 0;
+}
+
+/* ============================================================
+   Footer Buttons
+   ============================================================ */
+
+.popup__footer {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.popup__btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.popup__btn--primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.popup__btn--primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.popup__btn--secondary {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.popup__btn--secondary:hover {
+  background-color: #e8eaed;
+}

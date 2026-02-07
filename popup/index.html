@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>단어장</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="popup">
+    <!-- 헤더 -->
+    <header class="popup__header">
+      <h1 class="popup__title">단어장</h1>
+      <span class="popup__count" id="totalCount">0개 단어 저장됨</span>
+    </header>
+
+    <!-- 오늘 통계 -->
+    <section class="popup__section">
+      <div class="popup__stat-row">
+        <span class="popup__stat-label">오늘 저장한 단어</span>
+        <span class="popup__stat-value" id="todaySaved">0개</span>
+      </div>
+      <div class="popup__stat-row">
+        <span class="popup__stat-label">오늘 복습한 단어</span>
+        <span class="popup__stat-value" id="todayReviewed">0개</span>
+      </div>
+    </section>
+
+    <!-- 복습할 단어 -->
+    <section class="popup__section">
+      <h2 class="popup__section-title">오늘 복습할 단어</h2>
+      <ul class="popup__word-list" id="reviewList">
+        <li class="popup__word-list-empty">복습할 단어가 없습니다</li>
+      </ul>
+    </section>
+
+    <!-- 액션 버튼 -->
+    <footer class="popup__footer">
+      <button class="popup__btn popup__btn--primary" id="openSidePanel">단어장 열기</button>
+      <button class="popup__btn popup__btn--secondary" id="startTest">테스트 시작</button>
+    </footer>
+  </div>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

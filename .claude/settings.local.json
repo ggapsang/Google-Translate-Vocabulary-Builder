@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"c:\\\\Users\\\\ggaps\\\\OneDrive\\\\EnB_STUDIO\\\\Google-Translate-Vocabulary-Builder\" log --oneline -20)",
+      "Bash(python:*)"
+    ]
+  }
+}

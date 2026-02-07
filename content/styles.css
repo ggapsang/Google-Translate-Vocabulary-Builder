@@ -1,0 +1,42 @@
+/**
+ * content/styles.css - 구글 번역 페이지에 주입되는 스타일
+ *
+ * Stage 1-2: CSS 커스텀 프로퍼티 및 기본 스타일 정의.
+ * Stage 3-4에서 추가: 저장 버튼, 토스트 알림 스타일.
+ */
+
+/* ============================================================
+   CSS Custom Properties (Google Material Design 팔레트)
+   ============================================================ */
+
+:root {
+  --vocab-primary: #1a73e8;
+  --vocab-primary-hover: #1557b0;
+  --vocab-success: #34a853;
+  --vocab-warning: #fbbc04;
+  --vocab-error: #ea4335;
+  --vocab-bg: #ffffff;
+  --vocab-surface: #f8f9fa;
+  --vocab-border: #e0e0e0;
+  --vocab-text-primary: #202124;
+  --vocab-text-secondary: #5f6368;
+  --vocab-font-family: system-ui, -apple-system, 'Noto Sans KR', sans-serif;
+  --vocab-radius: 8px;
+  --vocab-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+/* ============================================================
+   주입 요소 기본 스타일 (.vocab- 네임스페이스)
+   ============================================================ */
+
+.vocab-container {
+  font-family: var(--vocab-font-family);
+  font-size: 14px;
+  color: var(--vocab-text-primary);
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.vocab-container * {
+  box-sizing: border-box;
+}
