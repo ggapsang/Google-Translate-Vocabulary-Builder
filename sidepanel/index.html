@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>나의 단어장</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <!-- 헤더 -->
   <header class="header">
@@ -13,14 +15,16 @@
     <button class="header__settings-btn" aria-label="설정">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"></circle>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        <path
+          d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+        </path>
       </svg>
     </button>
   </header>
 
   <!-- 검색바 -->
   <div class="search-bar">
-    <input type="text" class="search-bar__input" placeholder="단어 검색..." aria-label="단어 검색">
+    <input type="text" class="search-bar__input" id="searchInput" placeholder="단어 검색..." aria-label="단어 검색">
   </div>
 
   <!-- 탭 네비게이션 -->
@@ -32,9 +36,30 @@
 
   <!-- 도구바 (단어장 탭에서만 표시) -->
   <div class="toolbar" id="toolbar" style="display: none;">
-    <button class="toolbar__btn" aria-label="필터">필터</button>
-    <button class="toolbar__btn" aria-label="정렬">정렬</button>
-    <button class="toolbar__btn" aria-label="내보내기">내보내기</button>
+    <div class="toolbar__dropdown-wrap">
+      <button class="toolbar__btn" id="filterBtn" aria-label="필터" aria-expanded="false">필터</button>
+      <div class="toolbar__dropdown" id="filterDropdown">
+        <div class="toolbar__dropdown-section">
+          <div class="toolbar__dropdown-label">언어</div>
+          <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-filter-lang="all">전체 언어</button>
+        </div>
+        <div class="toolbar__dropdown-divider"></div>
+        <div class="toolbar__dropdown-section">
+          <div class="toolbar__dropdown-label">품사</div>
+          <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-filter-pos="all">전체 품사</button>
+        </div>
+      </div>
+    </div>
+    <div class="toolbar__dropdown-wrap">
+      <button class="toolbar__btn" id="sortBtn" aria-label="정렬" aria-expanded="false">정렬</button>
+      <div class="toolbar__dropdown" id="sortDropdown">
+        <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-sort="newest">최신순</button>
+        <button class="toolbar__dropdown-item" data-sort="alphabetical">가나다순</button>
+        <button class="toolbar__dropdown-item" data-sort="review-needed">복습 필요 순</button>
+        <button class="toolbar__dropdown-item" data-sort="oldest">저장일 오래된 순</button>
+      </div>
+    </div>
+    <button class="toolbar__btn" id="exportBtn" aria-label="내보내기">내보내기</button>
   </div>
 
   <!-- 콘텐츠 영역 -->
@@ -47,4 +72,5 @@
 
   <script src="app.js" type="module"></script>
 </body>
+
 </html>

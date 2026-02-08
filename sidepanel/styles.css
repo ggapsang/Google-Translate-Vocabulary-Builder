@@ -3,6 +3,7 @@
  *
  * refs/03 UIUX 설계 기반.
  * Google Material Design 컬러 팔레트, 4px 그리드 시스템.
+ * Stage 5-6: 드롭다운, 상세 뷰, 태그, 토스트, 삭제 확인 스타일 추가.
  */
 
 /* ============================================================
@@ -189,6 +190,79 @@ body {
   color: var(--color-primary);
 }
 
+.toolbar__btn--active-filter {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* ============================================================
+   Toolbar Dropdowns
+   ============================================================ */
+
+.toolbar__dropdown-wrap {
+  position: relative;
+}
+
+.toolbar__dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 20;
+  padding: var(--space-2) 0;
+  margin-top: var(--space-1);
+}
+
+.toolbar__dropdown--open {
+  display: block;
+}
+
+.toolbar__dropdown-section {
+  padding: var(--space-1) 0;
+}
+
+.toolbar__dropdown-label {
+  padding: var(--space-1) var(--space-3);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.toolbar__dropdown-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--space-1) 0;
+}
+
+.toolbar__dropdown-item {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--color-text-primary);
+  text-align: left;
+  transition: background-color 0.15s;
+}
+
+.toolbar__dropdown-item:hover {
+  background-color: var(--color-surface);
+}
+
+.toolbar__dropdown-item--active {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
 /* ============================================================
    Content Area
    ============================================================ */
@@ -206,6 +280,12 @@ body {
 
 .content__empty p {
   margin-bottom: var(--space-2);
+}
+
+.content__count {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-3);
 }
 
 /* ============================================================
@@ -288,4 +368,350 @@ body {
   font-size: 11px;
   color: var(--color-text-secondary);
   margin-top: var(--space-2);
+}
+
+/* ============================================================
+   Detail View
+   ============================================================ */
+
+.detail-view {
+  padding-bottom: var(--space-6);
+}
+
+.detail-view__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.detail-view__back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--color-primary);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.detail-view__back-btn:hover {
+  background-color: var(--color-surface);
+}
+
+.detail-view__actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.detail-view__action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+}
+
+.detail-view__action-btn:hover {
+  background-color: var(--color-surface);
+}
+
+.detail-view__word-section {
+  margin-bottom: var(--space-3);
+}
+
+.detail-view__word {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.detail-view__pronunciation {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.detail-view__divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--space-4) 0;
+}
+
+.detail-view__section {
+  margin-bottom: var(--space-3);
+}
+
+.detail-view__section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.detail-view__subsection {
+  margin-bottom: var(--space-3);
+}
+
+.detail-view__subsection-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.detail-view__meaning-list {
+  padding-left: var(--space-5);
+  font-size: 14px;
+  color: var(--color-text-primary);
+}
+
+.detail-view__meaning-list li {
+  margin-bottom: var(--space-1);
+}
+
+.detail-view__english-def {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.detail-view__synonyms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.detail-view__synonym-chip {
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.detail-view__example {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  background-color: var(--color-surface);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-primary);
+}
+
+.detail-view__context-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+/* 학습 현황 그리드 */
+.detail-view__stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.detail-view__stat {
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-sm);
+}
+
+.detail-view__stat-label {
+  display: block;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.detail-view__stat-value {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.detail-view__stars {
+  color: var(--color-warning);
+}
+
+/* 메모 */
+.detail-view__note {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.detail-view__note:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+.detail-view__save-note-btn {
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.detail-view__save-note-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* 태그 */
+.detail-view__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+  min-height: var(--space-6);
+}
+
+.detail-view__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--color-text-primary);
+}
+
+.detail-view__tag-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.detail-view__tag-remove:hover {
+  color: var(--color-error);
+}
+
+.detail-view__tag-input-wrap {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.detail-view__tag-input {
+  flex: 1;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+
+.detail-view__tag-input:focus {
+  border-color: var(--color-primary);
+}
+
+.detail-view__tag-add-btn {
+  padding: var(--space-1) var(--space-3);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--color-text-primary);
+}
+
+.detail-view__tag-add-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* 삭제 확인 */
+.detail-view__delete-confirm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+}
+
+.detail-view__delete-confirm-text {
+  color: var(--color-error);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.detail-view__delete-confirm-yes {
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--color-error);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.detail-view__delete-confirm-yes:hover {
+  opacity: 0.9;
+}
+
+.detail-view__delete-confirm-no {
+  padding: var(--space-1) var(--space-2);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--color-text-secondary);
+}
+
+.detail-view__delete-confirm-no:hover {
+  border-color: var(--color-text-secondary);
+}
+
+/* ============================================================
+   Detail Toast
+   ============================================================ */
+
+.detail-toast {
+  position: fixed;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-success);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  z-index: 30;
+  transition: opacity 0.2s;
+}
+
+.detail-toast--fadeout {
+  opacity: 0;
 }
