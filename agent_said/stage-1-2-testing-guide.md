@@ -16,11 +16,11 @@
 4. 프로젝트 루트 폴더 선택 (`manifest.json`이 있는 폴더)
 
 ### 확인 사항:
-- [v] 확장 프로그램이 오류 없이 로드됨
-- [v] "Google Translate Vocabulary Builder" 이름 표시
-- [v] 버전 "0.1.0" 표시
-- [v] Chrome 툴바에 아이콘 나타남 (파란색 사각형)
-- [v] 빨간색 "오류" 버튼이 없음
+- [x] 확장 프로그램이 오류 없이 로드됨
+- [x] "Google Translate Vocabulary Builder" 이름 표시
+- [x] 버전 "0.1.0" 표시
+- [x] Chrome 툴바에 아이콘 나타남 (파란색 사각형)
+- [x] 빨간색 "오류" 버튼이 없음
 
 ### 트러블슈팅:
 - 오류 발생 시 → "오류" 버튼 클릭하여 상세 메시지 확인
@@ -35,15 +35,15 @@
 2. F12로 개발자 도구 열기 → Console 탭
 
 ### 확인 사항:
-- [v] `[VocabBuilder] Content script loaded on Google Translate` 출력
-- [v] `[VocabBuilder] URL: https://translate.google.com/...` 출력
-- [v] `[VocabBuilder] Stage 1-2 content script initialization complete.` 출력
+- [x] `[VocabBuilder] Content script loaded on Google Translate` 출력
+- [x] `[VocabBuilder] URL: https://translate.google.com/...` 출력
+- [x] `[VocabBuilder] Stage 1-2 content script initialization complete.` 출력
 
 ### DOM 접근 테스트 (페이지 로드 2초 후):
 1. 아무 단어(예: "hello")를 영어 → 한국어로 번역 입력
 2. 사전 정보가 나타날 때까지 기다린 후 콘솔 확인
 
-- [v] `[VocabBuilder] DOM Access Test Results:` 출력
+- [x] `[VocabBuilder] DOM Access Test Results:` 출력
   - `PASS: Source textarea` (텍스트 입력 영역)
   - `PASS: Page body`
   - `Translation output`과 `Dictionary panel`은 단어 검색 시에만 PASS
@@ -51,7 +51,7 @@
   - `PASS: Translation output` (번역 결과 패널이 있을 때)
 
 ### 메시지 테스트:
-- [v] `[VocabBuilder] Messaging test PASSED: {type: "PONG", timestamp: ...}` 출력
+- [x] `[VocabBuilder] Messaging test PASSED: {type: "PONG", timestamp: ...}` 출력
 
 ---
 
@@ -63,13 +63,13 @@
 3. Console 탭 확인
 
 ### 확인 사항 (최초 설치 시):
-- [v] `[VocabBuilder] Extension installed/updated: install` 출력
-- [v] `[VocabBuilder] Initializing storage with defaults...` 출력
-- [v] `[VocabBuilder] Storage initialized` 출력
-- [v] `[VocabBuilder] Initial setup complete` 출력
+- [x] `[VocabBuilder] Extension installed/updated: install` 출력
+- [x] `[VocabBuilder] Initializing storage with defaults...` 출력
+- [x] `[VocabBuilder] Storage initialized` 출력
+- [x] `[VocabBuilder] Initial setup complete` 출력
 
 ### 확인 사항 (translate.google.com에서 PING 수신 시):
-- [v] `[VocabBuilder] Message received: {type: "PING"}` 출력
+- [x] `[VocabBuilder] Message received: {type: "PING"}` 출력
 
 ---
 
@@ -85,11 +85,11 @@ chrome.storage.sync.get(null, (data) => console.log('Sync Storage:', data));
 ```
 
 ### 확인 사항:
-- [v] `vocabulary_words`: 빈 배열 `[]`
-- [v] `vocabulary_meta`: `{version: "0.1.0", totalWords: 0, ...}`
-- [v] `vocabulary_stats`: `{total: {words: 0, reviews: 0, tests: 0}, ...}`
-- [v] `vocabulary_index`: 빈 객체 `{}`
-- [v] `settings`: `{theme: "light", language: "ko", ...}`
+- [x] `vocabulary_words`: 빈 배열 `[]`
+- [x] `vocabulary_meta`: `{version: "0.1.0", totalWords: 0, ...}`
+- [x] `vocabulary_stats`: `{total: {words: 0, reviews: 0, tests: 0}, ...}`
+- [x] `vocabulary_index`: 빈 객체 `{}`
+- [x] `settings`: `{theme: "light", language: "ko", ...}`
 
 #### 4-2. 테스트 단어 저장
 ```javascript
@@ -131,8 +131,8 @@ chrome.storage.local.get('vocabulary_words', (result) => {
 ```
 
 ### 확인 사항:
-- [v] `Test word saved!` 출력
-- [v] 4-1을 다시 실행하면 `vocabulary_words`에 test 단어 존재
+- [x] `Test word saved!` 출력
+- [x] 4-1을 다시 실행하면 `vocabulary_words`에 test 단어 존재
 
 #### 4-3. 정리
 ```javascript
@@ -151,13 +151,13 @@ chrome.storage.local.set({
 1. Chrome 툴바에서 확장 프로그램 아이콘 클릭
 
 ### 확인 사항:
-- [v] 팝업 윈도우가 열림 (약 350px 너비)
-- [v] **"단어장"** 헤더 표시
-- [v] **"0개 단어 저장됨"** 표시
-- [v] **"오늘 저장한 단어: 0개"** 표시
-- [v] **"복습할 단어가 없습니다"** 표시
-- [v] **"단어장 열기"** 버튼 존재
-- [v] **"테스트 시작"** 버튼 존재
+- [x] 팝업 윈도우가 열림 (약 350px 너비)
+- [x] **"단어장"** 헤더 표시
+- [x] **"0개 단어 저장됨"** 표시
+- [x] **"오늘 저장한 단어: 0개"** 표시
+- [x] **"복습할 단어가 없습니다"** 표시
+- [x] **"단어장 열기"** 버튼 존재
+- [x] **"테스트 시작"** 버튼 존재
 
 ---
 
@@ -169,15 +169,15 @@ chrome.storage.local.set({
 3. 사이드 패널 상단 드롭다운에서 **"Google Translate Vocabulary Builder"** 선택
 
 ### 확인 사항:
-- [v] **"나의 단어장"** 헤더 표시
-- [v] 설정(기어) 아이콘 표시
-- [v] 검색바 표시
-- [v] 탭 3개: 통계 / 단어장 / 테스트
+- [x] **"나의 단어장"** 헤더 표시
+- [x] 설정(기어) 아이콘 표시
+- [x] 검색바 표시
+- [x] 탭 3개: 통계 / 단어장 / 테스트
 
 ### 탭 전환 테스트:
-- [v] **"통계"** 클릭 → 총 단어 수 0, 총 복습 0, 총 테스트 0 표시. 도구바 숨김.
-- [v] **"단어장"** 클릭 → "아직 저장된 단어가 없습니다" 표시. 도구바(필터/정렬/내보내기) 표시.
-- [v] **"테스트"** 클릭 → "Phase 2에서 구현됩니다" 표시. 도구바 숨김.
+- [x] **"통계"** 클릭 → 총 단어 수 0, 총 복습 0, 총 테스트 0 표시. 도구바 숨김.
+- [x] **"단어장"** 클릭 → "아직 저장된 단어가 없습니다" 표시. 도구바(필터/정렬/내보내기) 표시.
+- [x] **"테스트"** 클릭 → "Phase 2에서 구현됩니다" 표시. 도구바 숨김.
 
 ---
 
@@ -200,11 +200,11 @@ fetch(chrome.runtime.getURL('lib/html_parsing_mapping_table.json'))
 ```
 
 ### 확인 사항:
-- [v] JSON 파일 로드 성공
-- [v] `_version`: `"0.1.0"`
-- [v] `dictionaryWord.container`: `".m2ySsc"`
-- [v] `meanings.meaningText`: `".ctwFHc"`
-- [v] `sourceText.selector`: `"textarea.er8xn"`
+- [x] JSON 파일 로드 성공
+- [x] `_version`: `"0.1.0"`
+- [x] `dictionaryWord.container`: `".m2ySsc"`
+- [x] `meanings.meaningText`: `".ctwFHc"`
+- [x] `sourceText.selector`: `"textarea.er8xn"`
 
 ---
 
@@ -214,13 +214,13 @@ fetch(chrome.runtime.getURL('lib/html_parsing_mapping_table.json'))
 
 | 테스트 | 결과 |
 |--------|------|
-| Test 1: Extension Loading | [v] |
-| Test 2: Content Script | [v] |
-| Test 3: Service Worker | [v] |
-| Test 4: Storage API | [v] |
-| Test 5: Popup | [v] |
-| Test 6: Side Panel | [v] |
-| Test 7: Parsing Constants | [v] |
+| Test 1: Extension Loading | [x] |
+| Test 2: Content Script | [x] |
+| Test 3: Service Worker | [x] |
+| Test 4: Storage API | [x] |
+| Test 5: Popup | [x] |
+| Test 6: Side Panel | [x] |
+| Test 7: Parsing Constants | [x] |
 
 ### 다음 단계 (Stage 3-4):
 - DOM 파싱 로직 구현 (html_parsing_mapping_table.json 셀렉터 사용)

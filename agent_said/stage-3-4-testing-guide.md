@@ -18,10 +18,10 @@
 3. 콘솔 로그 확인
 
 ### 확인 사항
-- [v] `[VocabBuilder] Content script loaded on Google Translate`
-- [v] `[VocabBuilder] Parsing selectors loaded: ...`
-- [v] `[VocabBuilder] Stage 3-4 features initialized.`
-- [v] `[VocabBuilder] Messaging test PASSED: {type: "PONG", ...}`
+- [x] `[VocabBuilder] Content script loaded on Google Translate`
+- [x] `[VocabBuilder] Parsing selectors loaded: ...`
+- [x] `[VocabBuilder] Stage 3-4 features initialized.`
+- [x] `[VocabBuilder] Messaging test PASSED: {type: "PONG", ...}`
 
 ---
 
@@ -35,9 +35,9 @@
 2. 우측 사전 패널이 나타날 때까지 대기
 
 ### 확인 사항
-- [v] 우측 사전 패널 하단에 `Save to Vocabulary` 버튼 표시
-- [v] 버튼 스타일(파란색) 정상 표시
-- [v] 단어를 다른 것으로 바꾸면 버튼 상태가 갱신됨
+- [x] 우측 사전 패널 하단에 `Save to Vocabulary` 버튼 표시
+- [x] 버튼 스타일(파란색) 정상 표시
+- [x] 단어를 다른 것으로 바꾸면 버튼 상태가 갱신됨
 
 ---
 
@@ -68,11 +68,11 @@ chrome.storage.local.get(['vocabulary_words', 'vocabulary_index', 'vocabulary_me
 ```
 
 ### 확인 사항
-- [v] 저장 성공 토스트 표시 (`Saved: <word>`)
-- [v] `vocabulary_words`에 새 항목 추가
-- [v] `vocabulary_index[word]`가 id를 가리킴
-- [v] `vocabulary_meta.totalWords` 값 증가
-- [v] `context.sourceText`, `context.translatedText`, `sourceLanguage`, `targetLanguage` 저장
+- [x] 저장 성공 토스트 표시 (`Saved: <word>`)
+- [x] `vocabulary_words`에 새 항목 추가
+- [x] `vocabulary_index[word]`가 id를 가리킴
+- [x] `vocabulary_meta.totalWords` 값 증가
+- [x] `context.sourceText`, `context.translatedText`, `sourceLanguage`, `targetLanguage` 저장
 
 ---
 
@@ -100,9 +100,9 @@ chrome.storage.local.get('vocabulary_words', (data) => {
 ```
 
 ### 확인 사항
-- [v] 저장된 단어는 버튼이 `Saved` 상태로 표시
-- [v] 재클릭 시 중복 항목이 늘어나지 않음
-- [v] 중복 시 토스트 메시지 표시 (`Already saved: <word>`)
+- [x] 저장된 단어는 버튼이 `Saved` 상태로 표시
+- [x] 재클릭 시 중복 항목이 늘어나지 않음
+- [x] 중복 시 토스트 메시지 표시 (`Already saved: <word>`)
   버튼을 다시 활성화해보고 싶다면 콘솔에서 다음을 실행하세요:
   const btn = document.getElementById('vocab-save-btn');
   if (btn) {
@@ -126,9 +126,9 @@ chrome.storage.local.get('vocabulary_words', (data) => {
 3. 각 상태에서 버튼 표시/상태 확인
 
 ### 확인 사항
-- [v] 단어 변경마다 버튼이 사라지지 않고 재주입됨
-- [v] 저장한 단어는 `Saved`, 미저장 단어는 `Save to Vocabulary`로 상태 분기
-- [v] 콘솔에 치명적인 오류(`Uncaught`) 없음
+- [x] 단어 변경마다 버튼이 사라지지 않고 재주입됨
+- [x] 저장한 단어는 `Saved`, 미저장 단어는 `Save to Vocabulary`로 상태 분기
+- [x] 콘솔에 치명적인 오류(`Uncaught`) 없음
 
 ---
 
@@ -142,8 +142,8 @@ chrome.storage.local.get('vocabulary_words', (data) => {
 2. 우측 패널에서 사전 정보 없음 상태 확인
 
 ### 확인 사항
-- [v] 저장 버튼이 노출되지 않거나 클릭 불가 상태
-- [v] 콘솔 오류 없음
+- [x] 저장 버튼이 노출되지 않거나 클릭 불가 상태
+- [x] 콘솔 오류 없음
 
 ---
 
@@ -157,9 +157,9 @@ chrome.storage.local.get('vocabulary_words', (data) => {
 2. Side Panel의 `단어장` 탭 이동
 
 ### 확인 사항
-- [v] 방금 저장한 단어 카드 표시
-- [v] 단어/품사/뜻/문맥 일부가 카드에 출력
-- [v] 저장 개수와 목록이 일치
+- [x] 방금 저장한 단어 카드 표시
+- [x] 단어/품사/뜻/문맥 일부가 카드에 출력
+- [x] 저장 개수와 목록이 일치
 
 ---
 
@@ -167,13 +167,13 @@ chrome.storage.local.get('vocabulary_words', (data) => {
 
 | 테스트 | 결과 |
 |--------|------|
-| Test 1: 초기화 로그 | [v] |
-| Test 2: 버튼 주입 | [v] |
-| Test 3: 파싱+저장 | [v] |
-| Test 4: 중복 저장 방지 | [v] |
-| Test 5: MutationObserver | [v] |
-| Test 6: 사전 없음 예외 | [v] |
-| Test 7: Side Panel 반영 | [v] |
+| Test 1: 초기화 로그 | [x] |
+| Test 2: 버튼 주입 | [x] |
+| Test 3: 파싱+저장 | [x] |
+| Test 4: 중복 저장 방지 | [x] |
+| Test 5: MutationObserver | [x] |
+| Test 6: 사전 없음 예외 | [x] |
+| Test 7: Side Panel 반영 | [x] |
 
 ### Stage 3-4 완료 기준
 - 저장 버튼이 Google Translate 사전 패널에서 안정적으로 동작한다.
