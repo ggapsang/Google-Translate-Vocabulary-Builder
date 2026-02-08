@@ -292,8 +292,8 @@ chrome.storage.local.get(['vocabulary_words', 'vocabulary_meta', 'vocabulary_ind
 | Test 1: Side Panel 초기화 | [x] |
 | Test 2: 단어 목록 렌더링 | [x] |
 | Test 3: 검색 기능 | [x] |
-| Test 4: 필터 드롭다운 | [ ] |
-| Test 5: 정렬 드롭다운 | [ ] |
+| Test 4: 필터 드롭다운 | [x] |
+| Test 5: 정렬 드롭다운 | [x] |
 | Test 6: 상세 뷰 표시 | [x] |
 | Test 7: 메모 저장 | [x] |
 | Test 8: 태그 추가/삭제 | [x] |
