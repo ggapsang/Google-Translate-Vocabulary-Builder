@@ -27,6 +27,7 @@
     selectors: null,
     observer: null,
     buttonEl: null,
+    floatingBtnEl: null,
     lastWord: '',
     lastUrl: window.location.href,
     updateTimer: null,
@@ -576,6 +577,128 @@
     STATE.buttonEl.disabled = false;
   }
 
+  // ── Floating save button (drag selection) ──
+
+  function hideFloatingButton() {
+    if (STATE.floatingBtnEl) {
+      STATE.floatingBtnEl.classList.remove('vocab-floating-save-btn--visible');
+    }
+  }
+
+  function setFloatingButtonState(status) {
+    if (!STATE.floatingBtnEl) return;
+    STATE.floatingBtnEl.classList.remove('vocab-floating-save-btn--saved', 'vocab-floating-save-btn--loading');
+
+    if (status === 'saved') {
+      STATE.floatingBtnEl.classList.add('vocab-floating-save-btn--saved');
+      STATE.floatingBtnEl.textContent = 'Saved';
+      setTimeout(hideFloatingButton, 800);
+      return;
+    }
+    if (status === 'loading') {
+      STATE.floatingBtnEl.classList.add('vocab-floating-save-btn--loading');
+      STATE.floatingBtnEl.textContent = 'Saving...';
+      return;
+    }
+    STATE.floatingBtnEl.textContent = 'Save';
+  }
+
+  function buildFloatingButton() {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'vocab-floating-save-btn vocab-container';
+    btn.id = 'vocab-floating-save-btn';
+    btn.textContent = 'Save';
+
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      try {
+        const parsed = parseCurrentWordData();
+        if (!parsed) {
+          showToast('No dictionary word detected.', 'error');
+          hideFloatingButton();
+          return;
+        }
+
+        setFloatingButtonState('loading');
+        const result = await saveWordData(parsed);
+
+        if (!result.saved && result.reason === 'duplicate') {
+          setFloatingButtonState('saved');
+          setButtonState('saved');
+          showToast(`Already saved: ${parsed.word}`, 'success');
+          return;
+        }
+
+        setFloatingButtonState('saved');
+        setButtonState('saved');
+        showToast(`Saved: ${parsed.word}`, 'success');
+      } catch (error) {
+        console.error('[VocabBuilder] Floating save failed:', error);
+        hideFloatingButton();
+        showToast('Failed to save word.', 'error');
+      }
+    });
+
+    return btn;
+  }
+
+  function showFloatingButton(x, y) {
+    if (!STATE.floatingBtnEl) {
+      STATE.floatingBtnEl = buildFloatingButton();
+      document.body.appendChild(STATE.floatingBtnEl);
+    }
+
+    setFloatingButtonState('default');
+
+    // 화면 밖으로 넘어가지 않도록 보정
+    const btnWidth = 80;
+    const btnHeight = 30;
+    const left = Math.min(x, window.innerWidth - btnWidth - 8);
+    const top = Math.max(y - btnHeight - 10, 8);
+
+    STATE.floatingBtnEl.style.left = `${left}px`;
+    STATE.floatingBtnEl.style.top = `${top}px`;
+    STATE.floatingBtnEl.classList.add('vocab-floating-save-btn--visible');
+  }
+
+  function initFloatingButton() {
+    document.addEventListener('mouseup', (e) => {
+      if (STATE.isDisposed) return;
+
+      // 플로팅 버튼 자체 클릭은 무시
+      if (e.target.closest('#vocab-floating-save-btn')) return;
+
+      // 기존 사전 패널 영역 내 드래그는 제외 (이미 저장 버튼 있음)
+      if (e.target.closest('.vocab-save-btn')) return;
+
+      const selection = window.getSelection();
+      const selectedText = (selection ? selection.toString() : '').trim();
+      if (!selectedText) {
+        hideFloatingButton();
+        return;
+      }
+
+      // 사전 패널에 단어가 감지되어야 저장 가능
+      const currentData = parseCurrentWordData();
+      if (!currentData) {
+        hideFloatingButton();
+        return;
+      }
+
+      showFloatingButton(e.clientX, e.clientY);
+    });
+
+    document.addEventListener('mousedown', (e) => {
+      if (STATE.isDisposed) return;
+      // 플로팅 버튼 자체를 클릭한 경우는 무시
+      if (e.target.closest('#vocab-floating-save-btn')) return;
+      hideFloatingButton();
+    });
+  }
+
+  // ── Dictionary panel save button ──
+
   function buildSaveButton() {
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -662,6 +785,11 @@
     }
 
     STATE.buttonEl = null;
+
+    if (STATE.floatingBtnEl) {
+      STATE.floatingBtnEl.remove();
+      STATE.floatingBtnEl = null;
+    }
   }
 
   async function ensureSaveButton() {
@@ -730,6 +858,21 @@
     });
   }
 
+  function startStorageListener() {
+    if (STATE.isDisposed) return;
+
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (STATE.isDisposed) return;
+      if (area !== 'local') return;
+
+      // vocabulary_index가 변경되면 버튼 상태 재확인
+      if (changes[STORAGE_KEYS.INDEX]) {
+        STATE.lastWord = '';
+        scheduleButtonUpdate(0);
+      }
+    });
+  }
+
   function testDOMAccess() {
     const tests = {
       'Source textarea': !!document.querySelector('textarea.er8xn'),
@@ -761,6 +904,8 @@
       await loadSelectors();
       await ensureSaveButton();
       startDOMObserver();
+      startStorageListener();
+      initFloatingButton();
       console.log('[VocabBuilder] Stage 3-4 features initialized.');
     } catch (error) {
       console.error('[VocabBuilder] Stage 3-4 initialization failed:', error);

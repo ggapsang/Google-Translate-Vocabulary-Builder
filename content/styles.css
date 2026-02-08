@@ -90,3 +90,48 @@
 .vocab-toast--fadeout {
   opacity: 0;
 }
+
+/* ── Floating Save Button (drag selection) ── */
+
+.vocab-floating-save-btn {
+  position: fixed;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--vocab-primary);
+  color: #fff;
+  font-family: var(--vocab-font-family);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 2147483647;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, background-color 0.18s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.vocab-floating-save-btn--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.vocab-floating-save-btn:hover {
+  background: var(--vocab-primary-hover);
+}
+
+.vocab-floating-save-btn--saved {
+  background: var(--vocab-success);
+  pointer-events: none;
+}
+
+.vocab-floating-save-btn--loading {
+  background: var(--vocab-text-secondary);
+  pointer-events: none;
+}
