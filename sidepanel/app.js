@@ -390,7 +390,7 @@ async function renderWordsTab() {
         <span class="word-card__word">${escapeHtml(word.word)}</span>
       </div>
       <div class="word-card__meta">
-        ${escapeHtml(word.definitions?.[0]?.pos || '')} | ${escapeHtml(word.definitions?.[0]?.meanings?.[0]?.korean || '')}
+        ${escapeHtml(word.definitions?.map(d => d.pos).filter(Boolean).join(' \u00b7 ') || '')} | ${escapeHtml(word.definitions?.[0]?.meanings?.[0]?.korean || '')}
       </div>
       <div class="word-card__context">"${escapeHtml((word.context?.sourceText || '').substring(0, 60))}..."</div>
       <div class="word-card__footer">

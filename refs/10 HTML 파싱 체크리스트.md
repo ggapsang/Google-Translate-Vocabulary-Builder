@@ -206,14 +206,35 @@
 
 ### B. 여러 품사가 있는 경우
 
-**시나리오**: 하나의 단어가 명사/동사 등 여러 품사로 쓰임 (예: "run")
+**시나리오**: 하나의 단어가 명사/동사 등 여러 품사로 쓰임 (예: "use")
 **확인 사항**:
 
 ```
-* 품사별 구분 방법: _____________________________________
-* 각 품사별 뜻 그룹핑: _____________________________________
-* 샘플 HTML: _____________________________________
+* 활성 카드 스코프 원칙:
+  - document 전역이 아니라, 현재 보이는 사전 카드(root) 내부에서만 파싱
+  - root 후보: .pnBFm > .utwOZb > .c11pPb 순으로 상위 컨테이너 탐색
+
+* 품사별 구분 방법:
+  - 뜻 테이블 순회 중 th.p3fwmd 발견 시 새 POS 그룹 시작
+  - tbody 분리 구조 / tr 내부 헤더 구조 모두 처리
+  - 새 POS 시작 시 이전 POS 그룹 flush 후 채번 다시 시작
+
+* CSS Selector
+  - POS 헤더(테이블): th.p3fwmd > div > div.WiGTJe.vweeBc
+  - 뜻 텍스트: .ctwFHc (fallback: [jsname='gm7qse'], [data-term-type='tl'])
+  - POS 상세 블록 헤더: .pRq29d > .WiGTJe
+
+* 샘플 HTML:
+  - <th class="p3fwmd" scope="rowgroup"><div class="Q1NlZe"><div class="WiGTJe vweeBc">명사</div></div></th>
+  - <div class="pRq29d"><div class="WiGTJe">동사</div></div>
+  - <div class="pRq29d"><div class="WiGTJe">명사</div></div>
+
+* 변형 대응 기준:
+  - tbody 1개 + tr 여러개: tr 단위로 th.p3fwmd 감지
+  - tbody 여러개: tbody 시작점에서 th.p3fwmd 감지 후 그룹 시작
+  - POS 상세(영문 정의/예문/유의어) 매칭: POS 라벨 정규화 일치 우선, 실패 시 인덱스 fallback
 ```
+
 
 ---
 
