@@ -1,0 +1,8 @@
+{
+  "appName": {
+    "message": "구글 번역 단어장"
+  },
+  "appDescription": {
+    "message": "구글 번역에서 단어를 저장하고 학습하는 크롬 확장 프로그램"
+  }
+}

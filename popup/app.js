@@ -4,24 +4,29 @@
  * Stage 1-2: 단어 수 표시, 오늘 통계, 복습 단어 목록.
  */
 
-import { getAllWords, getMeta } from '../lib/storage.js';
+import { getAllWords, getMeta, getSettings } from '../lib/storage.js';
+import { initI18n, t } from '../lib/i18n.js';
 
 async function init() {
   console.log('[VocabBuilder] Popup loaded');
+
+  const settings = await getSettings();
+  await initI18n(settings.language);
 
   const meta = await getMeta();
   const words = await getAllWords();
 
   // 총 단어 수
   document.getElementById('totalCount').textContent =
-    `${meta.totalWords}개 단어 저장됨`;
+    t('popup_wordCount', { count: meta.totalWords });
 
   // 오늘 통계
   const today = new Date().toISOString().split('T')[0];
   const todaySaved = words.filter(w =>
     w.metadata?.savedAt?.startsWith(today)
   ).length;
-  document.getElementById('todaySaved').textContent = `${todaySaved}개`;
+  document.getElementById('todaySaved').textContent =
+    t('popup_todaySavedCount', { count: todaySaved });
 
   // 복습할 단어
   const now = new Date().toISOString();
@@ -38,18 +43,16 @@ async function init() {
     ).join('');
 
     if (reviewWords.length > maxShow) {
-      reviewList.innerHTML += `<li>+${reviewWords.length - maxShow}개 더보기</li>`;
+      reviewList.innerHTML += `<li>${t('popup_moreReview', { count: reviewWords.length - maxShow })}</li>`;
     }
   }
 
   // 단어장 열기 버튼
   document.getElementById('openSidePanel').addEventListener('click', async () => {
     if (chrome.sidePanel) {
-      // 팝업에서 실행 시 WINDOW_ID_CURRENT(-2)는 유효하지 않을 수 있으므로
-      // 현재 윈도우 정보를 명시적으로 가져옵니다.
       const currentWindow = await chrome.windows.getCurrent();
       await chrome.sidePanel.open({ windowId: currentWindow.id });
-      window.close(); // 팝업 닫기
+      window.close();
     }
   });
 

@@ -1,0 +1,8 @@
+{
+  "appName": {
+    "message": "Google Translate Vocabulary Builder"
+  },
+  "appDescription": {
+    "message": "A Chrome extension that saves and learns words from Google Translate."
+  }
+}

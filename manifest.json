@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Google Translate Vocabulary Builder",
-  "description": "A Chrome extension that saves and learns words from Google Translate.",
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDescription__",
+  "default_locale": "ko",
   "version": "0.1.0",
   "permissions": [
     "storage",
@@ -47,7 +48,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "lib/html_parsing_mapping_table.json"
+        "lib/html_parsing_mapping_table.json",
+        "lib/locales/*.json"
       ],
       "matches": [
         "https://translate.google.com/*"

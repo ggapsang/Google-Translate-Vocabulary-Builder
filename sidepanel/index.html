@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>나의 단어장</title>
+  <title data-i18n="sidepanel_title">나의 단어장</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
   <!-- 헤더 -->
   <header class="header">
-    <h1 class="header__title">나의 단어장</h1>
-    <button class="header__settings-btn" aria-label="설정">
+    <h1 class="header__title" data-i18n="sidepanel_title">나의 단어장</h1>
+    <button class="header__settings-btn" data-i18n-aria="sidepanel_settingsLabel" aria-label="설정">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"></circle>
         <path
@@ -24,51 +24,72 @@
 
   <!-- 검색바 -->
   <div class="search-bar">
-    <input type="text" class="search-bar__input" id="searchInput" placeholder="단어 검색..." aria-label="단어 검색">
+    <input type="text" class="search-bar__input" id="searchInput"
+      data-i18n-placeholder="sidepanel_searchPlaceholder" placeholder="단어 검색..."
+      data-i18n-aria="sidepanel_searchAriaLabel" aria-label="단어 검색">
   </div>
 
   <!-- 탭 네비게이션 -->
   <nav class="tabs">
-    <button class="tabs__btn tabs__btn--active" data-tab="stats">통계</button>
-    <button class="tabs__btn" data-tab="words">단어장</button>
-    <button class="tabs__btn" data-tab="test">테스트</button>
+    <button class="tabs__btn tabs__btn--active" data-tab="stats" data-i18n="sidepanel_tabStats">통계</button>
+    <button class="tabs__btn" data-tab="words" data-i18n="sidepanel_tabWords">단어장</button>
+    <button class="tabs__btn" data-tab="test" data-i18n="sidepanel_tabTest">테스트</button>
   </nav>
 
   <!-- 도구바 (단어장 탭에서만 표시) -->
   <div class="toolbar" id="toolbar" style="display: none;">
     <div class="toolbar__dropdown-wrap">
-      <button class="toolbar__btn" id="filterBtn" aria-label="필터" aria-expanded="false">필터</button>
+      <button class="toolbar__btn" id="filterBtn" data-i18n-aria="sidepanel_filter" aria-label="필터" aria-expanded="false" data-i18n="sidepanel_filter">필터</button>
       <div class="toolbar__dropdown" id="filterDropdown">
         <div class="toolbar__dropdown-section">
-          <div class="toolbar__dropdown-label">언어</div>
-          <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-filter-lang="all">전체 언어</button>
+          <div class="toolbar__dropdown-label" data-i18n="sidepanel_langLabel">언어</div>
+          <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-filter-lang="all" data-i18n="sidepanel_langAll">전체 언어</button>
         </div>
         <div class="toolbar__dropdown-divider"></div>
         <div class="toolbar__dropdown-section">
-          <div class="toolbar__dropdown-label">품사</div>
-          <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-filter-pos="all">전체 품사</button>
+          <div class="toolbar__dropdown-label" data-i18n="sidepanel_posLabel">품사</div>
+          <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-filter-pos="all" data-i18n="sidepanel_posAll">전체 품사</button>
         </div>
       </div>
     </div>
     <div class="toolbar__dropdown-wrap">
-      <button class="toolbar__btn" id="sortBtn" aria-label="정렬" aria-expanded="false">정렬</button>
+      <button class="toolbar__btn" id="sortBtn" data-i18n-aria="sidepanel_sort" aria-label="정렬" aria-expanded="false" data-i18n="sidepanel_sort">정렬</button>
       <div class="toolbar__dropdown" id="sortDropdown">
-        <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-sort="newest">최신순</button>
-        <button class="toolbar__dropdown-item" data-sort="alphabetical">가나다순</button>
-        <button class="toolbar__dropdown-item" data-sort="review-needed">복습 필요 순</button>
-        <button class="toolbar__dropdown-item" data-sort="oldest">저장일 오래된 순</button>
+        <button class="toolbar__dropdown-item toolbar__dropdown-item--active" data-sort="newest" data-i18n="sidepanel_sortNewest">최신순</button>
+        <button class="toolbar__dropdown-item" data-sort="alphabetical" data-i18n="sidepanel_sortAlpha">가나다순</button>
+        <button class="toolbar__dropdown-item" data-sort="review-needed" data-i18n="sidepanel_sortReview">복습 필요 순</button>
+        <button class="toolbar__dropdown-item" data-sort="oldest" data-i18n="sidepanel_sortOldest">저장일 오래된 순</button>
       </div>
     </div>
-    <button class="toolbar__btn" id="exportBtn" aria-label="내보내기">내보내기</button>
+    <button class="toolbar__btn" id="exportBtn" data-i18n-aria="sidepanel_export" aria-label="내보내기" data-i18n="sidepanel_export">내보내기</button>
   </div>
 
   <!-- 콘텐츠 영역 -->
   <main class="content" id="content">
     <div class="content__empty">
-      <p>아직 저장된 단어가 없습니다.</p>
-      <p>구글 번역에서 단어를 검색하고 저장해보세요!</p>
+      <p data-i18n="sidepanel_emptyTitle">아직 저장된 단어가 없습니다.</p>
+      <p data-i18n="sidepanel_emptyDesc">구글 번역에서 단어를 검색하고 저장해보세요!</p>
     </div>
   </main>
+
+  <!-- 설정 오버레이 -->
+  <div class="settings-overlay" id="settingsOverlay" style="display: none;">
+    <div class="settings-panel">
+      <div class="settings-panel__header">
+        <h2 data-i18n="settings_title">설정</h2>
+        <button class="settings-panel__close" id="settingsClose">&times;</button>
+      </div>
+      <div class="settings-panel__body">
+        <div class="settings-panel__row">
+          <label data-i18n="settings_language">언어</label>
+          <select id="languageSelect" class="settings-panel__select">
+            <option value="ko">한국어</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js" type="module"></script>
 </body>

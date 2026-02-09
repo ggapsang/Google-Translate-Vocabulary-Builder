@@ -35,6 +35,36 @@
     isDisposed: false
   };
 
+  // ── Mini i18n for content script ──
+
+  const I18N = {
+    translations: {},
+    lang: 'ko',
+
+    async load(lang) {
+      try {
+        const url = chrome.runtime.getURL(`lib/locales/${lang}.json`);
+        const res = await fetch(url);
+        if (res.ok) {
+          this.translations = await res.json();
+          this.lang = lang;
+        }
+      } catch (e) {
+        console.warn('[VocabBuilder] Failed to load i18n locale:', e);
+      }
+    },
+
+    t(key, params) {
+      let str = this.translations[key] || key;
+      if (params) {
+        for (const [k, v] of Object.entries(params)) {
+          str = str.replaceAll(`{${k}}`, v);
+        }
+      }
+      return str;
+    }
+  };
+
   function isGoogleTranslatePage() {
     return window.location.hostname === 'translate.google.com';
   }
@@ -561,19 +591,19 @@
 
     if (status === 'saved') {
       STATE.buttonEl.classList.add('vocab-save-btn--saved');
-      STATE.buttonEl.textContent = 'Saved';
+      STATE.buttonEl.textContent = I18N.t('content_saved');
       STATE.buttonEl.disabled = true;
       return;
     }
 
     if (status === 'loading') {
       STATE.buttonEl.classList.add('vocab-save-btn--loading');
-      STATE.buttonEl.textContent = 'Saving...';
+      STATE.buttonEl.textContent = I18N.t('content_saving');
       STATE.buttonEl.disabled = true;
       return;
     }
 
-    STATE.buttonEl.textContent = 'Save to Vocabulary';
+    STATE.buttonEl.textContent = I18N.t('content_saveToVocab');
     STATE.buttonEl.disabled = false;
   }
 
@@ -591,16 +621,16 @@
 
     if (status === 'saved') {
       STATE.floatingBtnEl.classList.add('vocab-floating-save-btn--saved');
-      STATE.floatingBtnEl.textContent = 'Saved';
+      STATE.floatingBtnEl.textContent = I18N.t('content_saved');
       setTimeout(hideFloatingButton, 800);
       return;
     }
     if (status === 'loading') {
       STATE.floatingBtnEl.classList.add('vocab-floating-save-btn--loading');
-      STATE.floatingBtnEl.textContent = 'Saving...';
+      STATE.floatingBtnEl.textContent = I18N.t('content_saving');
       return;
     }
-    STATE.floatingBtnEl.textContent = 'Save';
+    STATE.floatingBtnEl.textContent = I18N.t('content_save');
   }
 
   function buildFloatingButton() {
@@ -608,14 +638,14 @@
     btn.type = 'button';
     btn.className = 'vocab-floating-save-btn vocab-container';
     btn.id = 'vocab-floating-save-btn';
-    btn.textContent = 'Save';
+    btn.textContent = I18N.t('content_save');
 
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
       try {
         const parsed = parseCurrentWordData();
         if (!parsed) {
-          showToast('No dictionary word detected.', 'error');
+          showToast(I18N.t('content_noWord'), 'error');
           hideFloatingButton();
           return;
         }
@@ -626,17 +656,17 @@
         if (!result.saved && result.reason === 'duplicate') {
           setFloatingButtonState('saved');
           setButtonState('saved');
-          showToast(`Already saved: ${parsed.word}`, 'success');
+          showToast(I18N.t('content_alreadySaved', { word: parsed.word }), 'success');
           return;
         }
 
         setFloatingButtonState('saved');
         setButtonState('saved');
-        showToast(`Saved: ${parsed.word}`, 'success');
+        showToast(I18N.t('content_savedWord', { word: parsed.word }), 'success');
       } catch (error) {
         console.error('[VocabBuilder] Floating save failed:', error);
         hideFloatingButton();
-        showToast('Failed to save word.', 'error');
+        showToast(I18N.t('content_saveFailed'), 'error');
       }
     });
 
@@ -663,7 +693,7 @@
   }
 
   function initFloatingButton() {
-    document.addEventListener('mouseup', (e) => {
+    document.addEventListener('mouseup', async (e) => {
       if (STATE.isDisposed) return;
 
       // 플로팅 버튼 자체 클릭은 무시
@@ -687,6 +717,12 @@
       }
 
       showFloatingButton(e.clientX, e.clientY);
+
+      // 이미 저장된 단어면 Saved 상태로 표시
+      const alreadySaved = await isSavedWord(currentData.word);
+      if (alreadySaved) {
+        setFloatingButtonState('saved');
+      }
     });
 
     document.addEventListener('mousedown', (e) => {
@@ -704,13 +740,13 @@
     btn.type = 'button';
     btn.className = 'vocab-save-btn vocab-container';
     btn.id = 'vocab-save-btn';
-    btn.textContent = 'Save to Vocabulary';
+    btn.textContent = I18N.t('content_saveToVocab');
 
     btn.addEventListener('click', async () => {
       try {
         const parsed = parseCurrentWordData();
         if (!parsed) {
-          showToast('No dictionary word detected.', 'error');
+          showToast(I18N.t('content_noWord'), 'error');
           return;
         }
 
@@ -719,16 +755,16 @@
 
         if (!result.saved && result.reason === 'duplicate') {
           setButtonState('saved');
-          showToast(`Already saved: ${parsed.word}`, 'success');
+          showToast(I18N.t('content_alreadySaved', { word: parsed.word }), 'success');
           return;
         }
 
         setButtonState('saved');
-        showToast(`Saved: ${parsed.word}`, 'success');
+        showToast(I18N.t('content_savedWord', { word: parsed.word }), 'success');
       } catch (error) {
         console.error('[VocabBuilder] Failed to save word:', error);
         setButtonState('default');
-        showToast('Failed to save word.', 'error');
+        showToast(I18N.t('content_saveFailed'), 'error');
       }
     });
 
@@ -899,12 +935,49 @@
     });
   }
 
+  async function loadI18nFromSettings() {
+    try {
+      const result = await new Promise((resolve) => {
+        chrome.storage.sync.get('settings', resolve);
+      });
+      const lang = result?.settings?.language || 'ko';
+      await I18N.load(lang);
+    } catch (e) {
+      console.warn('[VocabBuilder] Failed to load i18n settings, using default:', e);
+      await I18N.load('ko');
+    }
+  }
+
+  function startSettingsListener() {
+    if (STATE.isDisposed) return;
+
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (STATE.isDisposed) return;
+      if (area !== 'sync') return;
+
+      if (changes.settings) {
+        const newLang = changes.settings.newValue?.language;
+        if (newLang && newLang !== I18N.lang) {
+          I18N.load(newLang).then(() => {
+            // 현재 버튼 텍스트를 새 언어로 갱신
+            if (STATE.buttonEl) {
+              const isSaved = STATE.buttonEl.classList.contains('vocab-save-btn--saved');
+              setButtonState(isSaved ? 'saved' : 'default');
+            }
+          });
+        }
+      }
+    });
+  }
+
   async function initStage34() {
     try {
+      await loadI18nFromSettings();
       await loadSelectors();
       await ensureSaveButton();
       startDOMObserver();
       startStorageListener();
+      startSettingsListener();
       initFloatingButton();
       console.log('[VocabBuilder] Stage 3-4 features initialized.');
     } catch (error) {

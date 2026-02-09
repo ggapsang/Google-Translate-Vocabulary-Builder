@@ -5,7 +5,8 @@
  * Stage 5-6: 검색(디바운스), 필터/정렬 드롭다운, 상세 뷰, 수정/삭제.
  */
 
-import { getAllWords, getWordById, updateWord, deleteWord, getMeta, getStats } from '../lib/storage.js';
+import { getAllWords, getWordById, updateWord, deleteWord, getMeta, getStats, getSettings, saveSettings } from '../lib/storage.js';
+import { initI18n, t, setLanguage, getCurrentLang, getLocaleCode, onLanguageChange, translatePage } from '../lib/i18n.js';
 
 // ============================================================
 // 앱 상태
@@ -234,7 +235,9 @@ function populateFilterDropdown() {
 
 function updateFilterBtnLabel() {
   const activeCount = (state.filterLangPair !== 'all' ? 1 : 0) + state.filterPos.size;
-  filterBtn.textContent = activeCount > 0 ? `\ud544\ud130 (${activeCount})` : '\ud544\ud130';
+  filterBtn.textContent = activeCount > 0
+    ? t('sidepanel_filterCount', { count: activeCount })
+    : t('sidepanel_filter');
   filterBtn.classList.toggle('toolbar__btn--active-filter', activeCount > 0);
 }
 
@@ -333,20 +336,20 @@ async function renderStatsTab() {
   contentArea.innerHTML = `
     <div class="stats-overview">
       <div class="stats-card">
-        <div class="stats-card__label">\ucd1d \ub2e8\uc5b4 \uc218</div>
+        <div class="stats-card__label">${t('stats_totalWords')}</div>
         <div class="stats-card__value">${meta.totalWords}</div>
       </div>
       <div class="stats-card">
-        <div class="stats-card__label">\ucd1d \ubcf5\uc2b5 \ud69f\uc218</div>
+        <div class="stats-card__label">${t('stats_totalReviews')}</div>
         <div class="stats-card__value">${stats.total.reviews}</div>
       </div>
       <div class="stats-card">
-        <div class="stats-card__label">\ucd1d \ud14c\uc2a4\ud2b8 \ud69f\uc218</div>
+        <div class="stats-card__label">${t('stats_totalTests')}</div>
         <div class="stats-card__value">${stats.total.tests}</div>
       </div>
     </div>
     <p style="text-align:center; color: var(--color-text-secondary); margin-top: 24px;">
-      \ud1b5\uacc4 \ucc28\ud2b8\ub294 Phase 2\uc5d0\uc11c \uad6c\ud604\ub429\ub2c8\ub2e4.
+      ${t('stats_chartPlaceholder')}
     </p>
   `;
 }
@@ -364,8 +367,8 @@ async function renderWordsTab() {
   if (state.allWords.length === 0) {
     contentArea.innerHTML = `
       <div class="content__empty">
-        <p>\uc544\uc9c1 \uc800\uc7a5\ub41c \ub2e8\uc5b4\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.</p>
-        <p>\uad6c\uae00 \ubc88\uc5ed\uc5d0\uc11c \ub2e8\uc5b4\ub97c \uac80\uc0c9\ud558\uace0 \uc800\uc7a5\ud574\ubcf4\uc138\uc694!</p>
+        <p>${t('sidepanel_emptyTitle')}</p>
+        <p>${t('sidepanel_emptyDesc')}</p>
       </div>
     `;
     return;
@@ -374,15 +377,15 @@ async function renderWordsTab() {
   if (words.length === 0) {
     contentArea.innerHTML = `
       <div class="content__empty">
-        <p>\uac80\uc0c9 \uacb0\uacfc\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.</p>
+        <p>${t('sidepanel_noResults')}</p>
       </div>
     `;
     return;
   }
 
   const countHtml = state.allWords.length !== words.length
-    ? `<div class="content__count">${words.length}\uac1c / ${state.allWords.length}\uac1c</div>`
-    : `<div class="content__count">${words.length}\uac1c \ub2e8\uc5b4</div>`;
+    ? `<div class="content__count">${t('words_countFiltered', { count: words.length, total: state.allWords.length })}</div>`
+    : `<div class="content__count">${t('words_countTotal', { count: words.length })}</div>`;
 
   contentArea.innerHTML = countHtml + words.map(word => `
     <div class="word-card" data-id="${word.id}">
@@ -395,7 +398,7 @@ async function renderWordsTab() {
       <div class="word-card__context">"${escapeHtml((word.context?.sourceText || '').substring(0, 60))}..."</div>
       <div class="word-card__footer">
         <span>${timeAgo(word.metadata?.savedAt)}</span>
-        <span>\ubcf5\uc2b5 ${word.metadata?.reviewCount || 0}\ud68c</span>
+        <span>${t('words_reviewCount', { count: word.metadata?.reviewCount || 0 })}</span>
       </div>
     </div>
   `).join('');
@@ -404,7 +407,7 @@ async function renderWordsTab() {
 function renderTestTab() {
   contentArea.innerHTML = `
     <div class="content__empty">
-      <p>\ud14c\uc2a4\ud2b8 \uae30\ub2a5\uc740 Phase 2\uc5d0\uc11c \uad6c\ud604\ub429\ub2c8\ub2e4.</p>
+      <p>${t('test_placeholder')}</p>
     </div>
   `;
 }
@@ -444,9 +447,9 @@ async function renderDetailView(wordId) {
   contentArea.innerHTML = `
     <div class="detail-view">
       <div class="detail-view__header">
-        <button class="detail-view__back-btn" id="detailBackBtn" aria-label="\ub4a4\ub85c">\u2190 \ub4a4\ub85c</button>
+        <button class="detail-view__back-btn" id="detailBackBtn" aria-label="${t('detail_backLabel')}">${t('detail_back')}</button>
         <div class="detail-view__actions" id="detailActions">
-          <button class="detail-view__action-btn" id="detailDeleteBtn" aria-label="\uc0ad\uc81c" title="\uc0ad\uc81c">\ud83d\uddd1\ufe0f</button>
+          <button class="detail-view__action-btn" id="detailDeleteBtn" aria-label="${t('detail_deleteLabel')}" title="${t('detail_deleteLabel')}">\ud83d\uddd1\ufe0f</button>
         </div>
       </div>
 
@@ -459,27 +462,27 @@ async function renderDetailView(wordId) {
 
       ${(word.definitions || []).map(def => `
         <div class="detail-view__section">
-          <div class="detail-view__section-title">\ud488\uc0ac: ${escapeHtml(def.pos || '')}</div>
+          <div class="detail-view__section-title">${t('detail_pos', { pos: escapeHtml(def.pos || '') })}</div>
 
           ${(def.meanings || []).length > 0 ? `
             <div class="detail-view__subsection">
-              <div class="detail-view__subsection-title">\ud55c\uad6d\uc5b4 \ub73b</div>
+              <div class="detail-view__subsection-title">${t('detail_koreanMeaning')}</div>
               <ol class="detail-view__meaning-list">
-                ${def.meanings.map(m => `<li>${escapeHtml(m.korean || '(\ub73b \uc5c6\uc74c)')}</li>`).join('')}
+                ${def.meanings.map(m => `<li>${escapeHtml(m.korean || t('detail_noMeaning'))}</li>`).join('')}
               </ol>
             </div>
           ` : ''}
 
           ${def.meanings?.[0]?.english ? `
             <div class="detail-view__subsection">
-              <div class="detail-view__subsection-title">\uc601\uc5b4 \uc815\uc758</div>
+              <div class="detail-view__subsection-title">${t('detail_englishDef')}</div>
               <p class="detail-view__english-def">${escapeHtml(def.meanings[0].english)}</p>
             </div>
           ` : ''}
 
           ${(def.meanings?.[0]?.synonyms || []).length > 0 ? `
             <div class="detail-view__subsection">
-              <div class="detail-view__subsection-title">\uc720\uc758\uc5b4</div>
+              <div class="detail-view__subsection-title">${t('detail_synonyms')}</div>
               <div class="detail-view__synonyms">
                 ${def.meanings[0].synonyms.map(s => `<span class="detail-view__synonym-chip">${escapeHtml(s)}</span>`).join('')}
               </div>
@@ -488,7 +491,7 @@ async function renderDetailView(wordId) {
 
           ${def.meanings?.[0]?.example ? `
             <div class="detail-view__subsection">
-              <div class="detail-view__subsection-title">\uc608\ubb38</div>
+              <div class="detail-view__subsection-title">${t('detail_example')}</div>
               <p class="detail-view__example">"${escapeHtml(def.meanings[0].example)}"</p>
             </div>
           ` : ''}
@@ -499,14 +502,14 @@ async function renderDetailView(wordId) {
 
       ${word.context?.sourceText ? `
         <div class="detail-view__section">
-          <div class="detail-view__section-title">\ubc88\uc5ed \ucee8\ud14d\uc2a4\ud2b8</div>
+          <div class="detail-view__section-title">${t('detail_translationContext')}</div>
           <div class="detail-view__subsection">
-            <div class="detail-view__subsection-title">\uc6d0\ubb38 (${escapeHtml(word.context.sourceLanguage || '')})</div>
+            <div class="detail-view__subsection-title">${t('detail_sourceText', { lang: escapeHtml(word.context.sourceLanguage || '') })}</div>
             <p class="detail-view__context-text">${escapeHtml(word.context.sourceText)}</p>
           </div>
           ${word.context.translatedText ? `
             <div class="detail-view__subsection">
-              <div class="detail-view__subsection-title">\ubc88\uc5ed (${escapeHtml(word.context.targetLanguage || '')})</div>
+              <div class="detail-view__subsection-title">${t('detail_translatedText', { lang: escapeHtml(word.context.targetLanguage || '') })}</div>
               <p class="detail-view__context-text">${escapeHtml(word.context.translatedText)}</p>
             </div>
           ` : ''}
@@ -515,23 +518,23 @@ async function renderDetailView(wordId) {
       ` : ''}
 
       <div class="detail-view__section">
-        <div class="detail-view__section-title">\ud559\uc2b5 \ud604\ud669</div>
+        <div class="detail-view__section-title">${t('detail_learningStatus')}</div>
         <div class="detail-view__stats-grid">
           <div class="detail-view__stat">
-            <span class="detail-view__stat-label">\ubcf5\uc2b5 \ud69f\uc218</span>
-            <span class="detail-view__stat-value">${word.metadata?.reviewCount || 0}\ud68c</span>
+            <span class="detail-view__stat-label">${t('detail_reviewCountLabel')}</span>
+            <span class="detail-view__stat-value">${t('detail_reviewCountValue', { count: word.metadata?.reviewCount || 0 })}</span>
           </div>
           <div class="detail-view__stat">
-            <span class="detail-view__stat-label">\ub9c8\uc9c0\ub9c9 \ubcf5\uc2b5</span>
-            <span class="detail-view__stat-value">${word.metadata?.lastReviewed ? timeAgo(word.metadata.lastReviewed) : '\uc5c6\uc74c'}</span>
+            <span class="detail-view__stat-label">${t('detail_lastReview')}</span>
+            <span class="detail-view__stat-value">${word.metadata?.lastReviewed ? timeAgo(word.metadata.lastReviewed) : t('detail_lastReviewNone')}</span>
           </div>
           <div class="detail-view__stat">
-            <span class="detail-view__stat-label">\uc219\ub828\ub3c4</span>
+            <span class="detail-view__stat-label">${t('detail_mastery')}</span>
             <span class="detail-view__stat-value">${renderMasteryStars(word.metadata?.masteryLevel || 0)}</span>
           </div>
           <div class="detail-view__stat">
-            <span class="detail-view__stat-label">\uc800\uc7a5\uc77c</span>
-            <span class="detail-view__stat-value">${word.metadata?.savedAt ? new Date(word.metadata.savedAt).toLocaleDateString('ko-KR') : ''}</span>
+            <span class="detail-view__stat-label">${t('detail_savedDate')}</span>
+            <span class="detail-view__stat-value">${word.metadata?.savedAt ? new Date(word.metadata.savedAt).toLocaleDateString(getLocaleCode()) : ''}</span>
           </div>
         </div>
       </div>
@@ -539,21 +542,21 @@ async function renderDetailView(wordId) {
       <div class="detail-view__divider"></div>
 
       <div class="detail-view__section">
-        <div class="detail-view__section-title">\uba54\ubaa8</div>
-        <textarea class="detail-view__note" id="detailNote" placeholder="\uba54\ubaa8\ub97c \uc785\ub825\ud558\uc138\uc694..." rows="3">${escapeHtml(word.userNote || '')}</textarea>
-        <button class="detail-view__save-note-btn" id="saveNoteBtn">\uba54\ubaa8 \uc800\uc7a5</button>
+        <div class="detail-view__section-title">${t('detail_memo')}</div>
+        <textarea class="detail-view__note" id="detailNote" placeholder="${t('detail_memoPlaceholder')}" rows="3">${escapeHtml(word.userNote || '')}</textarea>
+        <button class="detail-view__save-note-btn" id="saveNoteBtn">${t('detail_memoSave')}</button>
       </div>
 
       <div class="detail-view__section">
-        <div class="detail-view__section-title">\ud0dc\uadf8</div>
+        <div class="detail-view__section-title">${t('detail_tags')}</div>
         <div class="detail-view__tags" id="detailTags">
           ${(word.tags || []).map(tag => `
-            <span class="detail-view__tag">${escapeHtml(tag)} <button class="detail-view__tag-remove" data-tag="${escapeHtml(tag)}" aria-label="\ud0dc\uadf8 \uc81c\uac70">x</button></span>
+            <span class="detail-view__tag">${escapeHtml(tag)} <button class="detail-view__tag-remove" data-tag="${escapeHtml(tag)}" aria-label="${t('detail_tagRemoveLabel')}">x</button></span>
           `).join('')}
         </div>
         <div class="detail-view__tag-input-wrap">
-          <input type="text" class="detail-view__tag-input" id="tagInput" placeholder="\ud0dc\uadf8 \ucd94\uac00..." maxlength="20">
-          <button class="detail-view__tag-add-btn" id="addTagBtn">\ucd94\uac00</button>
+          <input type="text" class="detail-view__tag-input" id="tagInput" placeholder="${t('detail_tagPlaceholder')}" maxlength="20">
+          <button class="detail-view__tag-add-btn" id="addTagBtn">${t('detail_tagAdd')}</button>
         </div>
       </div>
     </div>
@@ -594,7 +597,7 @@ function bindDetailViewEvents(word) {
     if (success) {
       const idx = state.allWords.findIndex(w => w.id === word.id);
       if (idx !== -1) state.allWords[idx].userNote = note;
-      showDetailToast('\uba54\ubaa8\uac00 \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4.');
+      showDetailToast(t('detail_memoSaved'));
     }
   });
 
@@ -610,7 +613,7 @@ function bindDetailViewEvents(word) {
     if (!removeBtn) return;
 
     const tagToRemove = removeBtn.dataset.tag;
-    const newTags = (word.tags || []).filter(t => t !== tagToRemove);
+    const newTags = (word.tags || []).filter(tg => tg !== tagToRemove);
     const success = await updateWord(word.id, { tags: newTags });
     if (success) {
       word.tags = newTags;
@@ -648,9 +651,9 @@ function showDeleteConfirmation(word) {
   const actions = document.getElementById('detailActions');
   actions.innerHTML = `
     <div class="detail-view__delete-confirm">
-      <span class="detail-view__delete-confirm-text">"${escapeHtml(word.word)}" \uc0ad\uc81c?</span>
-      <button class="detail-view__delete-confirm-yes" id="confirmDeleteBtn">\uc0ad\uc81c</button>
-      <button class="detail-view__delete-confirm-no" id="cancelDeleteBtn">\ucde8\uc18c</button>
+      <span class="detail-view__delete-confirm-text">${t('detail_deleteConfirm', { word: escapeHtml(word.word) })}</span>
+      <button class="detail-view__delete-confirm-yes" id="confirmDeleteBtn">${t('detail_deleteBtn')}</button>
+      <button class="detail-view__delete-confirm-no" id="cancelDeleteBtn">${t('detail_cancelBtn')}</button>
     </div>
   `;
 
@@ -668,7 +671,7 @@ function showDeleteConfirmation(word) {
 
   document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
     actions.innerHTML = `
-      <button class="detail-view__action-btn" id="detailDeleteBtn" aria-label="\uc0ad\uc81c" title="\uc0ad\uc81c">\ud83d\uddd1\ufe0f</button>
+      <button class="detail-view__action-btn" id="detailDeleteBtn" aria-label="${t('detail_deleteLabel')}" title="${t('detail_deleteLabel')}">\ud83d\uddd1\ufe0f</button>
     `;
     document.getElementById('detailDeleteBtn').addEventListener('click', () => {
       showDeleteConfirmation(word);
@@ -701,6 +704,13 @@ function showDetailToast(message) {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
+    // 설정 오버레이 닫기
+    const overlay = document.getElementById('settingsOverlay');
+    if (overlay.style.display !== 'none') {
+      overlay.style.display = 'none';
+      return;
+    }
+
     // 열린 드롭다운 닫기
     const openDropdowns = document.querySelectorAll('.toolbar__dropdown--open');
     if (openDropdowns.length > 0) {
@@ -718,6 +728,37 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================================
+// 설정 오버레이
+// ============================================================
+
+const settingsOverlay = document.getElementById('settingsOverlay');
+const settingsCloseBtn = document.getElementById('settingsClose');
+const languageSelect = document.getElementById('languageSelect');
+
+document.querySelector('.header__settings-btn').addEventListener('click', () => {
+  languageSelect.value = getCurrentLang();
+  settingsOverlay.style.display = 'flex';
+});
+
+settingsCloseBtn.addEventListener('click', () => {
+  settingsOverlay.style.display = 'none';
+});
+
+settingsOverlay.addEventListener('click', (e) => {
+  if (e.target === settingsOverlay) {
+    settingsOverlay.style.display = 'none';
+  }
+});
+
+languageSelect.addEventListener('change', async (e) => {
+  const newLang = e.target.value;
+  const settings = await getSettings();
+  settings.language = newLang;
+  await saveSettings(settings);
+  await setLanguage(newLang);
+});
+
+// ============================================================
 // 유틸리티
 // ============================================================
 
@@ -728,10 +769,10 @@ function timeAgo(isoString) {
   const diffHr = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHr / 24);
 
-  if (diffMin < 1) return '\ubc29\uae08 \uc804';
-  if (diffMin < 60) return `${diffMin}\ubd84 \uc804`;
-  if (diffHr < 24) return `${diffHr}\uc2dc\uac04 \uc804`;
-  return `${diffDay}\uc77c \uc804`;
+  if (diffMin < 1) return t('timeAgo_justNow');
+  if (diffMin < 60) return t('timeAgo_minutes', { m: diffMin });
+  if (diffHr < 24) return t('timeAgo_hours', { h: diffHr });
+  return t('timeAgo_days', { d: diffDay });
 }
 
 function escapeHtml(str) {
@@ -740,11 +781,25 @@ function escapeHtml(str) {
 }
 
 // ============================================================
+// 언어 변경 콜백
+// ============================================================
+
+onLanguageChange(async () => {
+  // 동적 콘텐츠 재렌더링
+  populateFilterDropdown();
+  updateFilterBtnLabel();
+  await renderTabContent(state.activeTab);
+});
+
+// ============================================================
 // 초기화
 // ============================================================
 
 async function init() {
   console.log('[VocabBuilder] Side panel loaded (Stage 5-6)');
+
+  const settings = await getSettings();
+  await initI18n(settings.language);
 
   state.allWords = await getAllWords();
   applyFiltersAndSort();
