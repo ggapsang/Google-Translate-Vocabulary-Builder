@@ -588,22 +588,25 @@
     if (!STATE.buttonEl) return;
 
     STATE.buttonEl.classList.remove('vocab-save-btn--saved', 'vocab-save-btn--loading');
+    const img = STATE.buttonEl.querySelector('img');
 
     if (status === 'saved') {
       STATE.buttonEl.classList.add('vocab-save-btn--saved');
-      STATE.buttonEl.textContent = I18N.t('content_saved');
+      if (img) img.src = chrome.runtime.getURL('assets/buttons/btn_bookmark_added_32.png');
+      STATE.buttonEl.title = 'saved';
       STATE.buttonEl.disabled = true;
       return;
     }
 
     if (status === 'loading') {
       STATE.buttonEl.classList.add('vocab-save-btn--loading');
-      STATE.buttonEl.textContent = I18N.t('content_saving');
+      STATE.buttonEl.title = '';
       STATE.buttonEl.disabled = true;
       return;
     }
 
-    STATE.buttonEl.textContent = I18N.t('content_saveToVocab');
+    if (img) img.src = chrome.runtime.getURL('assets/buttons/btn_bookmark_32.png');
+    STATE.buttonEl.title = 'save';
     STATE.buttonEl.disabled = false;
   }
 
@@ -740,7 +743,14 @@
     btn.type = 'button';
     btn.className = 'vocab-save-btn vocab-container';
     btn.id = 'vocab-save-btn';
-    btn.textContent = I18N.t('content_saveToVocab');
+    btn.title = 'save';
+
+    const img = document.createElement('img');
+    img.src = chrome.runtime.getURL('assets/buttons/btn_bookmark_32.png');
+    img.alt = 'save';
+    img.width = 32;
+    img.height = 32;
+    btn.appendChild(img);
 
     btn.addEventListener('click', async () => {
       try {

@@ -49,7 +49,8 @@
     {
       "resources": [
         "lib/html_parsing_mapping_table.json",
-        "lib/locales/*.json"
+        "lib/locales/*.json",
+        "assets/buttons/*.png"
       ],
       "matches": [
         "https://translate.google.com/*"

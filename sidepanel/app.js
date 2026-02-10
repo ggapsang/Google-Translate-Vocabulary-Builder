@@ -449,7 +449,7 @@ async function renderDetailView(wordId) {
       <div class="detail-view__header">
         <button class="detail-view__back-btn" id="detailBackBtn" aria-label="${t('detail_backLabel')}">${t('detail_back')}</button>
         <div class="detail-view__actions" id="detailActions">
-          <button class="detail-view__action-btn" id="detailDeleteBtn" aria-label="${t('detail_deleteLabel')}" title="${t('detail_deleteLabel')}">\ud83d\uddd1\ufe0f</button>
+          <button class="detail-view__action-btn" id="detailDeleteBtn" aria-label="${t('detail_deleteLabel')}" title="${t('detail_deleteLabel')}"><img src="../assets/buttons/btn_delete18.png" alt="" width="18" height="18"></button>
         </div>
       </div>
 
@@ -671,7 +671,7 @@ function showDeleteConfirmation(word) {
 
   document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
     actions.innerHTML = `
-      <button class="detail-view__action-btn" id="detailDeleteBtn" aria-label="${t('detail_deleteLabel')}" title="${t('detail_deleteLabel')}">\ud83d\uddd1\ufe0f</button>
+      <button class="detail-view__action-btn" id="detailDeleteBtn" aria-label="${t('detail_deleteLabel')}" title="${t('detail_deleteLabel')}"><img src="../assets/buttons/btn_delete18.png" alt="" width="18" height="18"></button>
     `;
     document.getElementById('detailDeleteBtn').addEventListener('click', () => {
       showDeleteConfirmation(word);
