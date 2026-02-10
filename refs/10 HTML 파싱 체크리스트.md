@@ -264,16 +264,30 @@
 **확인 사항**:
 
 ```
-* 영문 정의 블록의 전체 컨테이너:
-  - CSS Selector: _____________________________________
-  - 샘플 HTML: _____________________________________
+* 영문 정의 블록의 전체 컨테이너 / 개별 번호별 영문 정의:
+  - 영문 정의 블록은 따로 정의되어 있지 않으며 사전 전체 판넬이 있음
+  - 영문 정의 1개/예문 1개/동의어를 묶는 박스는 있음 
 
-* 개별 번호별 영문 정의:
-  - 번호가 매겨지는 구조 (ol/li? div에 번호 텍스트?): _____________________________________
-  - 개별 정의 CSS Selector: _____________________________________
-  - 샘플 HTML (정의가 2개 이상인 경우 전체):
-    _____________________________________
-    _____________________________________
+  예시: represent
+
+    - 첫번째 박스 css selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(3) > div.ILf88
+    - 첫번째 뜻: 
+      - css selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(3) > div.ILf88 > div:nth-child(1)
+      - html element: <div lang="en">be entitled or appointed to act or speak for (someone), especially in an official capacity.</div>
+    - 두번째 박스 css selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(4) > div.ILf88
+    - 두번째 뜻:
+      - css selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(4) > div.ILf88 > div:nth-child(1)
+      - html element: <div lang="en">constitute; amount to.</div>
+    - 세번째 박스 css selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(5) > div.ILf88
+    - 세번째 뜻:
+      - css selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(5) > div.ILf88 > div:nth-child(1)
+      - html element: <div lang="en">depict (a particular subject) in a picture or other work of art.</div>
+    - 네번째 박스 css selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(6) > div.ILf88
+    - 네번째 뜻:
+      - css selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(6) > div.ILf88 > div:nth-child(2)
+      - html selector: <div lang="en">state or point out (something) clearly.</div>
+
+
 
 * 각 번호별 정의에 딸린 예문:
   - 정의와 예문의 부모-자식 관계: _____________________________________
