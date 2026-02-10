@@ -9,7 +9,6 @@
   "popup_openVocab": "단어장 열기",
   "popup_startTest": "테스트 시작",
   "popup_moreReview": "+{count}개 더보기",
-
   "sidepanel_title": "나의 단어장",
   "sidepanel_settingsLabel": "설정",
   "sidepanel_searchPlaceholder": "단어 검색...",
@@ -32,16 +31,13 @@
   "sidepanel_emptyTitle": "아직 저장된 단어가 없습니다.",
   "sidepanel_emptyDesc": "구글 번역에서 단어를 검색하고 저장해보세요!",
   "sidepanel_noResults": "검색 결과가 없습니다.",
-
   "stats_totalWords": "총 단어 수",
   "stats_totalReviews": "총 복습 횟수",
   "stats_totalTests": "총 테스트 횟수",
   "stats_chartPlaceholder": "통계 차트는 Phase 2에서 구현됩니다.",
-
   "words_countFiltered": "{count}개 / {total}개",
   "words_countTotal": "{count}개 단어",
   "words_reviewCount": "복습 {count}회",
-
   "detail_back": "← 뒤로",
   "detail_backLabel": "뒤로",
   "detail_deleteLabel": "삭제",
@@ -69,17 +65,14 @@
   "detail_tagPlaceholder": "태그 추가...",
   "detail_tagAdd": "추가",
   "detail_tagRemoveLabel": "태그 제거",
-  "detail_deleteConfirm": "\"{word}\" 삭제?",
+  "detail_deleteConfirm": "삭제하시겠습니까?",
   "detail_deleteBtn": "삭제",
   "detail_cancelBtn": "취소",
-
   "test_placeholder": "테스트 기능은 Phase 2에서 구현됩니다.",
-
   "timeAgo_justNow": "방금 전",
   "timeAgo_minutes": "{m}분 전",
   "timeAgo_hours": "{h}시간 전",
   "timeAgo_days": "{d}일 전",
-
   "content_saveToVocab": "Save to Vocabulary",
   "content_saved": "Saved",
   "content_saving": "Saving...",
@@ -88,7 +81,6 @@
   "content_alreadySaved": "Already saved: {word}",
   "content_savedWord": "Saved: {word}",
   "content_saveFailed": "Failed to save word.",
-
   "settings_title": "설정",
   "settings_language": "언어"
 }
