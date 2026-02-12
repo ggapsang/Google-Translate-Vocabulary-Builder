@@ -4,7 +4,7 @@
 > (PM) 이라고 되어 있는 체크리스트는 Agent가 수행하지 않음
 ---
 ### Sprint 3
-- [ ] (PM) 영문 뜻만 나오는 단어(한글 뜻이 나오지 않음)의 경우 어떻게 크롤링 되는지 테스트하고 해당 테스트 결과에 따라 문제 발생시 수정(수정 내용은 별도 리스트로 작성)
+- [x] (PM) 영문 뜻만 나오는 단어(한글 뜻이 나오지 않음)의 경우 어떻게 크롤링 되는지 테스트하고 해당 테스트 결과에 따라 문제 발생시 수정(수정 내용은 별도 리스트로 작성)
       예문 : The principle of optical triangulation in 1D is straightforward, as depicted in figure 4.13. A collimated beam (e.g., focused infrared LED, laser beam) is transmitted toward the target.
       번역 : 1차원 광학 삼각측량의 원리는 그림 4.13에 나타낸 바와 같이 간단합니다.
       단어 : collimated (collimate)

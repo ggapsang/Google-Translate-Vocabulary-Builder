@@ -32,7 +32,8 @@
     lastUrl: window.location.href,
     updateTimer: null,
     toastTimer: null,
-    isDisposed: false
+    isDisposed: false,
+    isExpanding: false
   };
 
   // ── Mini i18n for content script ──
@@ -198,6 +199,54 @@
     return STATE.selectors;
   }
 
+  function waitForDOMSettle(target, timeoutMs) {
+    return new Promise((resolve) => {
+      let debounceTimer = null;
+      const observer = new MutationObserver(() => {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          observer.disconnect();
+          resolve();
+        }, 100);
+      });
+      observer.observe(target, { childList: true, subtree: true });
+      setTimeout(() => {
+        observer.disconnect();
+        if (debounceTimer) clearTimeout(debounceTimer);
+        resolve();
+      }, timeoutMs);
+    });
+  }
+
+  async function expandAllSections(root) {
+    if (!root || !STATE.selectors) return;
+
+    const expandCfg = STATE.selectors.expandButtons;
+    const containerSel = expandCfg?.container || '.bZPC5';
+    const btnSel = expandCfg?.button || "button[aria-expanded='false']";
+    const fallbackSel = expandCfg?.fallback?.jsname;
+
+    let buttons = Array.from(root.querySelectorAll(btnSel))
+      .filter(btn => btn.closest(containerSel));
+
+    if (buttons.length === 0 && fallbackSel) {
+      buttons = Array.from(root.querySelectorAll(fallbackSel))
+        .filter(btn => btn.closest(containerSel));
+    }
+
+    if (buttons.length === 0) return;
+
+    STATE.isExpanding = true;
+    console.debug(`[VocabBuilder] Expanding ${buttons.length} section(s)`);
+
+    for (const btn of buttons) {
+      try { btn.click(); } catch (e) { /* ignore */ }
+    }
+
+    await waitForDOMSettle(root, 500);
+    STATE.isExpanding = false;
+  }
+
   function parseMeanings(root, selectors) {
     const meaningNodes = queryAllIn(root, [
       selectors.meanings?.meaningText,
@@ -209,32 +258,40 @@
     return Array.from(new Set(values));
   }
 
-  function extractSectionDetails(elements, selectors) {
-    let englishDef = '';
-    let example = '';
-    const synonyms = [];
+  function extractSingleSense(block, selectors) {
+    const defSel = selectors.englishDefinition?.definitionText || ".ILf88 > div[lang='en']";
+    const exSel = selectors.exampleSentence?.selector || '.EesCWb q';
+    const synSel = selectors.synonyms?.synonymItem || '.e7Qsd .wQegqc';
 
+    const defEl = block.querySelector(defSel);
+    const exEl = block.querySelector(exSel);
+    const synNodes = Array.from(block.querySelectorAll(synSel));
+
+    return {
+      englishDef: safeText(defEl ? defEl.textContent : ''),
+      example: safeText(exEl ? exEl.textContent : ''),
+      synonyms: Array.from(new Set(synNodes.map(n => safeText(n.textContent)).filter(Boolean)))
+    };
+  }
+
+  function extractAllSenses(elements, selectors) {
+    const senseBlockSel = selectors.multipleDefinitions?.senseBlock || '.ILf88';
+    const senseBlocks = [];
     for (const el of elements) {
-      if (!englishDef) {
-        const defSel = selectors.englishDefinition?.definitionText || ".ILf88 > div[lang='en']";
-        const defEl = el.querySelector(defSel);
-        if (defEl) englishDef = safeText(defEl.textContent);
-      }
-      if (!example) {
-        const exSel = selectors.exampleSentence?.selector || '.EesCWb q';
-        const exEl = el.querySelector(exSel);
-        if (exEl) example = safeText(exEl.textContent);
-      }
-      if (synonyms.length === 0) {
-        const synSel = selectors.synonyms?.synonymItem || '.e7Qsd .wQegqc';
-        el.querySelectorAll(synSel).forEach(n => {
-          const val = safeText(n.textContent);
-          if (val) synonyms.push(val);
-        });
-      }
+      senseBlocks.push(...Array.from(el.querySelectorAll(senseBlockSel)));
     }
 
-    return { englishDef, example, synonyms: Array.from(new Set(synonyms)) };
+    if (senseBlocks.length === 0) {
+      // .ILf88 블록 없으면 elements 전체를 하나의 sense로 fallback
+      const wrapper = document.createElement('div');
+      for (const el of elements) {
+        wrapper.appendChild(el.cloneNode(true));
+      }
+      const sense = extractSingleSense(wrapper, selectors);
+      return (sense.englishDef || sense.example) ? [sense] : [];
+    }
+
+    return senseBlocks.map(block => extractSingleSense(block, selectors));
   }
 
   function extractDetailsPerPos(container, selectors, multiPosConfig) {
@@ -255,7 +312,7 @@
           entries.push({
             pos: currentPos,
             key: normalizePosLabel(currentPos),
-            details: extractSectionDetails(sectionEls, selectors)
+            senses: extractAllSenses(sectionEls, selectors)
           });
         }
         const posEl = child.querySelector(posTextSel);
@@ -269,17 +326,17 @@
       entries.push({
         pos: currentPos,
         key: normalizePosLabel(currentPos),
-        details: extractSectionDetails(sectionEls, selectors)
+        senses: extractAllSenses(sectionEls, selectors)
       });
     }
 
     const byKey = new Map();
     entries.forEach((entry) => {
       if (!entry.key || byKey.has(entry.key)) return;
-      byKey.set(entry.key, entry.details);
+      byKey.set(entry.key, entry.senses);
     });
 
-    return { byKey, ordered: entries.map((entry) => entry.details) };
+    return { byKey, ordered: entries.map((entry) => entry.senses) };
   }
 
   function parseDefinitions(root, selectors) {
@@ -370,42 +427,39 @@
 
     if (posGroups.length < 2) return null;
 
-    const detailsByKey = new Map();
-    const detailsOrdered = [];
+    const sensesByKey = new Map();
+    const sensesOrdered = [];
 
     containers.forEach((container) => {
-      const details = extractDetailsPerPos(container, selectors, multiPosConfig);
-      details.byKey.forEach((value, key) => {
-        if (!detailsByKey.has(key)) {
-          detailsByKey.set(key, value);
+      const result = extractDetailsPerPos(container, selectors, multiPosConfig);
+      result.byKey.forEach((senses, key) => {
+        if (!sensesByKey.has(key)) {
+          sensesByKey.set(key, senses);
         }
       });
-      detailsOrdered.push(...details.ordered);
+      sensesOrdered.push(...result.ordered);
     });
 
-    return posGroups.map((group, index) => {
+    return posGroups.map((group, groupIndex) => {
       const key = normalizePosLabel(group.pos);
-      const details = detailsByKey.get(key) || detailsOrdered[index] || {};
-      return {
-        pos: group.pos,
-        meanings: group.koreanValues.map((korean) => ({
+      const senses = sensesByKey.get(key) || sensesOrdered[groupIndex] || [];
+
+      const maxLen = Math.max(group.koreanValues.length, senses.length);
+      const meanings = [];
+
+      for (let i = 0; i < maxLen; i++) {
+        const korean = group.koreanValues[i] || '';
+        const sense = senses[i] || { englishDef: '', example: '', synonyms: [] };
+        meanings.push({
           korean,
-          english: details.englishDef || '',
-          synonyms: details.synonyms || [],
-          example: details.example || ''
-        }))
-      };
+          english: sense.englishDef || '',
+          synonyms: sense.synonyms || [],
+          example: sense.example || ''
+        });
+      }
+
+      return { pos: group.pos, meanings };
     });
-  }
-
-  function parseSynonyms(root, selectors) {
-    const synonymNodes = queryAllIn(root, [
-      selectors.synonyms?.synonymItem,
-      selectors.synonyms?.fallback?.jsname
-    ]);
-
-    const values = synonymNodes.map((node) => safeText(node.textContent)).filter(Boolean);
-    return Array.from(new Set(values));
   }
 
   function parseTranslatedText(selectors) {
@@ -462,26 +516,21 @@
       const posText = safeText(posEl ? posEl.textContent : '') || 'unknown';
 
       const meaningValues = parseMeanings(root, selectors);
-      const englishDefinitionEl = queryFirstIn(root, [selectors.englishDefinition?.definitionText]);
-      const exampleEl = queryFirstIn(root, [selectors.exampleSentence?.selector]);
-      const synonyms = parseSynonyms(root, selectors);
+      const senses = extractAllSenses([root], selectors);
 
-      const englishDefinition = safeText(englishDefinitionEl ? englishDefinitionEl.textContent : '');
-      const example = safeText(exampleEl ? exampleEl.textContent : '');
+      const maxLen = Math.max(meaningValues.length, senses.length, 1);
+      const meanings = [];
 
-      const meanings = meaningValues.length > 0
-        ? meaningValues.map((korean) => ({
+      for (let i = 0; i < maxLen; i++) {
+        const korean = meaningValues[i] || '';
+        const sense = senses[i] || { englishDef: '', example: '', synonyms: [] };
+        meanings.push({
           korean,
-          english: englishDefinition,
-          synonyms,
-          example
-        }))
-        : [{
-          korean: '',
-          english: englishDefinition,
-          synonyms,
-          example
-        }];
+          english: sense.englishDef || '',
+          synonyms: sense.synonyms || [],
+          example: sense.example || ''
+        });
+      }
 
       definitions = [{ pos: posText, meanings }];
     }
@@ -646,14 +695,19 @@
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
       try {
+        setFloatingButtonState('loading');
+
+        const root = getActiveDictionaryRoot(STATE.selectors);
+        if (root) await expandAllSections(root);
+
         const parsed = parseCurrentWordData();
         if (!parsed) {
+          setFloatingButtonState('default');
           showToast(I18N.t('content_noWord'), 'error');
           hideFloatingButton();
           return;
         }
 
-        setFloatingButtonState('loading');
         const result = await saveWordData(parsed);
 
         if (!result.saved && result.reason === 'duplicate') {
@@ -754,13 +808,18 @@
 
     btn.addEventListener('click', async () => {
       try {
+        setButtonState('loading');
+
+        const root = getActiveDictionaryRoot(STATE.selectors);
+        if (root) await expandAllSections(root);
+
         const parsed = parseCurrentWordData();
         if (!parsed) {
+          setButtonState('default');
           showToast(I18N.t('content_noWord'), 'error');
           return;
         }
 
-        setButtonState('loading');
         const result = await saveWordData(parsed);
 
         if (!result.saved && result.reason === 'duplicate') {
@@ -889,6 +948,7 @@
     if (STATE.observer) return;
 
     STATE.observer = new MutationObserver(() => {
+      if (STATE.isExpanding) return;
       if (STATE.lastUrl !== window.location.href) {
         STATE.lastUrl = window.location.href;
         STATE.lastWord = '';

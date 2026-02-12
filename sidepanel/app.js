@@ -464,35 +464,31 @@ async function renderDetailView(wordId) {
         <div class="detail-view__section">
           <div class="detail-view__section-title">${t('detail_pos', { pos: escapeHtml(def.pos || '') })}</div>
 
-          ${(def.meanings || []).length > 0 ? `
+          ${(def.meanings || []).some(m => m.korean) ? `
             <div class="detail-view__subsection">
               <div class="detail-view__subsection-title">${t('detail_koreanMeaning')}</div>
               <ol class="detail-view__meaning-list">
-                ${def.meanings.map(m => `<li>${escapeHtml(m.korean || t('detail_noMeaning'))}</li>`).join('')}
+                ${def.meanings.filter(m => m.korean).map(m => `<li>${escapeHtml(m.korean)}</li>`).join('')}
               </ol>
             </div>
           ` : ''}
 
-          ${def.meanings?.[0]?.english ? `
+          ${(def.meanings || []).some(m => m.english) ? `
             <div class="detail-view__subsection">
               <div class="detail-view__subsection-title">${t('detail_englishDef')}</div>
-              <p class="detail-view__english-def">${escapeHtml(def.meanings[0].english)}</p>
-            </div>
-          ` : ''}
-
-          ${(def.meanings?.[0]?.synonyms || []).length > 0 ? `
-            <div class="detail-view__subsection">
-              <div class="detail-view__subsection-title">${t('detail_synonyms')}</div>
-              <div class="detail-view__synonyms">
-                ${def.meanings[0].synonyms.map(s => `<span class="detail-view__synonym-chip">${escapeHtml(s)}</span>`).join('')}
-              </div>
-            </div>
-          ` : ''}
-
-          ${def.meanings?.[0]?.example ? `
-            <div class="detail-view__subsection">
-              <div class="detail-view__subsection-title">${t('detail_example')}</div>
-              <p class="detail-view__example">"${escapeHtml(def.meanings[0].example)}"</p>
+              <ol class="detail-view__english-def-list">
+                ${def.meanings.filter(m => m.english).map(m => `
+                  <li>
+                    <p class="detail-view__english-def">${escapeHtml(m.english)}</p>
+                    ${m.example ? `<p class="detail-view__example">"${escapeHtml(m.example)}"</p>` : ''}
+                    ${(m.synonyms || []).length > 0 ? `
+                      <div class="detail-view__synonyms">
+                        ${m.synonyms.map(s => `<span class="detail-view__synonym-chip">${escapeHtml(s)}</span>`).join('')}
+                      </div>
+                    ` : ''}
+                  </li>
+                `).join('')}
+              </ol>
             </div>
           ` : ''}
         </div>

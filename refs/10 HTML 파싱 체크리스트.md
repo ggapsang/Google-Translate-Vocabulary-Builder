@@ -288,20 +288,35 @@
       - html selector: <div lang="en">state or point out (something) clearly.</div>
 
 
-
 * 각 번호별 정의에 딸린 예문:
-  - 정의와 예문의 부모-자식 관계: _____________________________________
-  - 개별 예문 CSS Selector: _____________________________________
-  - 샘플 HTML:
-    _____________________________________
+  - 예문 1
+    - 정의와 예문의 부모-자식 관계: _#yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(3) > div.ILf88
+    - 개별 예문 CSS Selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(3) > div.ILf88 > div.EesCWb
+    - 샘플 HTML:
+    <div class="EesCWb" lang="en"><q>for purposes of litigation, an infant can and must be represented by an adult</q></div>
+  - 예문 2
+    - 정의와 유의어의 부모-자식 관계: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(4) > div.ILf88
+    - 개별 유의어 블록 CSS Selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(4) > div.ILf88 > div.EesCWb
+    - 샘플 HTML:
+    <div class="EesCWb" lang="en"><q>this figure represents eleven percent of the company's total sales</q></div>
+  - 예문 2
+    - 정의와 유의어의 부모-자식 관계: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(4) > div.ILf88
+    - 개별 유의어 블록 CSS Selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(4) > div.ILf88 > div.EesCWb
+    - 샘플 HTML:
+    <div class="EesCWb" lang="en"><q>this figure represents eleven percent of the company's total sales</q></div>
+  - 예문 3
+    - 정의와 유의어의 부모-자식 관계: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(5) > div.ILf88
+    - 개별 유의어 블록 CSS Selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(5) > div.ILf88 > div.EesCWb
+    - 샘플 HTML:
+    <div class="EesCWb" lang="en"><q>santos are small wooden figures representing saints</q></div>
+  - 예문 4
+    - 정의와 유의어의 부모-자식 관계: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(6) > div.ILf88
+    - 개별 유의어 블록 CSS Selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div > div:nth-child(6) > div.ILf88 > div.EesCWb
+    - 샘플 HTML:
+    <div class="EesCWb" lang="en"><q>it was represented to him that she would be an unsuitable wife</q></div>
+    
 
-* 각 번호별 정의에 딸린 유의어:
-  - 정의와 유의어의 부모-자식 관계: _____________________________________
-  - 개별 유의어 블록 CSS Selector: _____________________________________
-  - 샘플 HTML:
-    _____________________________________
-
-* 번호별 정의의 총 개수 확인 (have 기준): _____개
+* 번호별 정의의 총 개수 확인 (represent 기준): 4개
 ```
 
 ---
@@ -323,16 +338,16 @@
 
 ```
 * '정의 모두 표시' / 'Show all definitions' 버튼:
-  - CSS Selector: _____________________________________
+  - CSS Selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(1) > div.bZPC5 > div:nth-child(1) > button > div.VfPpkd-RLmnJb
   - 버튼 텍스트 (한국어): _____________________________________
   - 버튼 텍스트 (영어 UI일 때): _____________________________________
-  - 샘플 HTML: _____________________________________
+  - 샘플 HTML:<div class="VfPpkd-RLmnJb"></div>
 
 * 버튼 클릭 전 DOM 상태:
-  - 숨겨진 정의가 DOM에 존재하지만 display:none인가? _____
-  - 아니면 클릭 후 새로 렌더링되는가? _____
-  - 간략히 보기에서 보이는 정의 개수: _____개
-  - 클릭 후 표시되는 정의 개수 (have 기준): _____개
+  - 숨겨진 정의가 DOM에 존재하지만 display:none인가? N
+  - 아니면 클릭 후 새로 렌더링되는가? Y
+  - 간략히 보기에서 보이는 정의 개수: 3개
+  - 클릭 후 표시되는 정의 개수 (make 기준): 11개
   - 샘플 HTML (클릭 전):
     _____________________________________
   - 샘플 HTML (클릭 후):
@@ -347,30 +362,38 @@
 
 ```
 * '예문 모두 표시' / 'Show all examples' 버튼:
-  - CSS Selector: _____________________________________
-  - 버튼 텍스트 (한국어): _____________________________________
-  - 샘플 HTML: _____________________________________
+  - CSS Selector: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(2) > div.bZPC5 > div:nth-child(1) > button
+  - 버튼 텍스트 (한국어): #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(2) > div.bZPC5 > div:nth-child(1) > button > span
+  - 샘플 HTML: <button class="VfPpkd-LgbsSe VfPpkd-LgbsSe-OWXEXe-INsAgc VfPpkd-LgbsSe-OWXEXe-dgl2Hf Rj2Mlf OLiIxf PDpWxe P62QJc LQeN7 PIEKz" jscontroller="soHxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;mlnRJb:fLiPzd" data-idom-class="Rj2Mlf OLiIxf PDpWxe P62QJc LQeN7 PIEKz" jsname="ix0Hvc" aria-expanded="false"><div class="VfPpkd-Jh9lGc"></div><div class="VfPpkd-J1Ukfc-LhBDec"></div><div class="VfPpkd-RLmnJb"></div><span jsname="V67aGc" class="VfPpkd-vQzf8d">예문 4개 모두 표시</span></button>
 
 * 버튼 클릭 전후 DOM 변화:
-  - 간략히 보기에서 보이는 예문 개수: _____개
-  - 클릭 후 표시되는 예문 개수: _____개
-  - 숨겨진 예문이 DOM에 존재하지만 display:none인가? _____
-  - 아니면 클릭 후 새로 렌더링되는가? _____
+  - 간략히 보기에서 보이는 예문 개수: 1개
+  - 클릭 후 표시되는 예문 개수: 4개
+  - 숨겨진 예문이 DOM에 존재하지만 display:none인가? N
+  - 아니면 클릭 후 새로 렌더링되는가? Y
+
+  - 하나만 표시될 때: #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div:nth-child(2) > div.inJTWc > div.y2fI6d > div.lc69I
+
+  - 모두 표시될 때: 
+    - #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div.q8icfe.sMVRZe > div.inJTWc > div.y2fI6d > div.lc69I
+    - #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div.q8icfe.sMVRZe > div.inJTWc > div:nth-child(3) > div > div.lc69I
+    - #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div.q8icfe.sMVRZe > div.inJTWc > div:nth-child(4) > div > div.lc69I
+    - #yDmH0d > c-wiz > div > div.kmXzdf > c-wiz > div.c11pPb > c-wiz > div > div.utwOZb > div.W50gQb > div.pnBFm > div.q8icfe.sMVRZe > div.inJTWc > div:nth-child(5) > div > div.lc69I
 ```
 
 #### E-3. 한국어 뜻(번역) 모두 표시 버튼
 
 ```
 * '번역 모두 표시' / 'Show all translations' 버튼:
-  - CSS Selector: _____________________________________
-  - 버튼 텍스트 (한국어): _____________________________________
-  - 샘플 HTML: _____________________________________
+  - CSS Selector: #ow27 > div.bZPC5 > div:nth-child(1) > button > div.VfPpkd-RLmnJb
+  - 버튼 텍스트 (한국어): 번역 50개 모두 표시
+  - 샘플 HTML: <div class="VfPpkd-RLmnJb"></div>
 
 * 버튼 클릭 전후 DOM 변화:
-  - 간략히 보기에서 보이는 뜻 개수: _____개
-  - 클릭 후 표시되는 뜻 개수: _____개
-  - 숨겨진 뜻이 DOM에 존재하지만 display:none인가? _____
-  - 아니면 클릭 후 새로 렌더링되는가? _____
+  - 간략히 보기에서 보이는 뜻 개수: 12개
+  - 클릭 후 표시되는 뜻 개수: 50개
+  - 숨겨진 뜻이 DOM에 존재하지만 display:none인가? N
+  - 아니면 클릭 후 새로 렌더링되는가? Y
 ```
 
 #### E-4. 공통 패턴
@@ -381,8 +404,8 @@
   - 구분 방법 (정의/예문/번역 각각): _____________________________________
 
 * 프로그래밍적으로 클릭하면 정상 작동하는가?
-  - button.click() 호출 시 DOM이 정상 업데이트되는가? _____
-  - 클릭 후 DOM 업데이트까지 대기 시간 필요한가? _____ms
+  - button.click() 호출 시 DOM이 정상 업데이트되는가? Y
+  - 클릭 후 DOM 업데이트까지 대기 시간 필요한가? 500ms 이내
 ```
 
 ---

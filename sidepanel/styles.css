@@ -473,6 +473,24 @@ body {
   margin-bottom: var(--space-1);
 }
 
+.detail-view__english-def-list {
+  padding-left: var(--space-5);
+  font-size: 13px;
+  color: var(--color-text-primary);
+}
+
+.detail-view__english-def-list li {
+  margin-bottom: var(--space-3);
+}
+
+.detail-view__english-def-list .detail-view__example {
+  margin-top: var(--space-1);
+}
+
+.detail-view__english-def-list .detail-view__synonyms {
+  margin-top: var(--space-1);
+}
+
 .detail-view__english-def {
   font-size: 13px;
   color: var(--color-text-secondary);
