@@ -18,8 +18,8 @@
       예문 : The principle of optical triangulation in 1D is straightforward, as depicted in figure 4.13. A collimated beam (e.g., focused infrared LED, laser beam) is transmitted toward the target.
       번역 : 1차원 광학 삼각측량의 원리는 그림 4.13에 나타낸 바와 같이 간단합니다.
       단어 : collimated (collimate)
-- [ ] 영문 정의가 여러 개의 번호로 나누어져 있을 경우 1개의 번호 안에 있는 뜻만 가져옴
-- [ ] 정의/예문/번역 모두 '모두 표시' 버튼을 클릭해야됨 '간략히 보기'에서는 일부 저장 값들이 누락됨 (현재는 최초의 1개 값만을 가져오고 있음)
+- [x] 영문 정의가 여러 개의 번호로 나누어져 있을 경우 1개의 번호 안에 있는 뜻만 가져옴
+- [x] 정의/예문/번역 모두 '모두 표시' 버튼을 클릭해야됨 '간략히 보기'에서는 일부 저장 값들이 누락됨 (현재는 최초의 1개 값만을 가져오고 있음)
       예컨데 have 같은 동사는 뜻이 많아 '정의 모두 표시'를 눌러야 모든 정의가 나옴
 - [x] UI에 하드코딩된 한국어 문자열을 확장 프로그램 설정에서 특정 언어로 바꿀 수 있도록 수정
 - [x] (PM) 🗑️ -> 구글 메터리얼 아이콘으로 변경

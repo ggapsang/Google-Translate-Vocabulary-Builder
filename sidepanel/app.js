@@ -5,7 +5,7 @@
  * Stage 5-6: 검색(디바운스), 필터/정렬 드롭다운, 상세 뷰, 수정/삭제.
  */
 
-import { getAllWords, getWordById, updateWord, deleteWord, getMeta, getStats, getSettings, saveSettings } from '../lib/storage.js';
+import { getAllWords, getWordById, updateWord, deleteWord, getMeta, getStats, getSettings, saveSettings, updateTestStats } from '../lib/storage.js';
 import { initI18n, t, setLanguage, getCurrentLang, getLocaleCode, onLanguageChange, translatePage } from '../lib/i18n.js';
 
 // ============================================================
@@ -21,6 +21,16 @@ const state = {
   sortBy: 'newest',
   activeTab: 'stats',
   detailWordId: null,
+
+  // 테스트 세션 상태 (Stage 7-8)
+  test: {
+    phase: 'idle',      // 'idle' | 'question' | 'feedback' | 'results'
+    questions: [],      // 준비된 문제 배열
+    currentIndex: 0,
+    answers: [],        // { wordId, word, correct, userAnswer, correctAnswer, matchedText, maskedSentence, hintSentence }
+    startTime: null,
+    config: { questionCount: 10, range: 'all' },
+  },
 };
 
 // ============================================================
@@ -49,6 +59,14 @@ tabButtons.forEach(btn => {
 function switchTab(tabName) {
   state.activeTab = tabName;
   state.detailWordId = null;
+
+  // 테스트 탭 진입 시 항상 초기 상태로 리셋
+  if (tabName === 'test') {
+    state.test.phase = 'idle';
+    state.test.questions = [];
+    state.test.answers = [];
+    state.test.currentIndex = 0;
+  }
 
   tabButtons.forEach(btn => {
     btn.classList.toggle('tabs__btn--active', btn.dataset.tab === tabName);
@@ -404,12 +422,502 @@ async function renderWordsTab() {
   `).join('');
 }
 
+// ============================================================
+// 테스트 모드 (Stage 7-8)
+// ============================================================
+
 function renderTestTab() {
+  switch (state.test.phase) {
+    case 'question':  renderTestQuestion(); break;
+    case 'feedback':  break; // renderTestFeedback가 직접 렌더링
+    case 'results':   renderTestResults(); break;
+    default:          renderTestSetup(); break;
+  }
+}
+
+// --- 유틸리티 ---
+
+function fisherYatesShuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function formatDuration(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSec / 60);
+  const seconds = totalSec % 60;
+  if (minutes > 0) return t('test_duration_min_sec', { m: minutes, s: seconds });
+  return t('test_duration_sec', { s: seconds });
+}
+
+function computeNewMastery(currentLevel, isCorrect) {
+  if (isCorrect) return Math.min((currentLevel || 0) + 1, 5);
+  return Math.max((currentLevel || 0) - 1, 0);
+}
+
+/**
+ * sourceText에 단어가 포함되어 있어 테스트 출제 가능한지 확인
+ */
+function isWordTestable(word) {
+  if (!word.context?.sourceText) return false;
+  if (!word.word) return false;
+  const sourceLower = word.context.sourceText.toLowerCase();
+  const wordLower = word.word.toLowerCase();
+  return sourceLower.includes(wordLower);
+}
+
+/**
+ * 설정 화면에서 출제 가능한 단어 수를 계산
+ */
+function countEligibleWords(range) {
+  let pool = [...state.allWords];
+  if (range === 'recent30') {
+    pool = [...pool]
+      .sort((a, b) => new Date(b.metadata?.savedAt || 0) - new Date(a.metadata?.savedAt || 0))
+      .slice(0, 30);
+  } else if (range === 'wrong') {
+    const wrongPool = pool.filter(w => w.metadata?.testResults?.some(r => !r.correct));
+    if (wrongPool.length > 0) pool = wrongPool;
+  }
+  return pool.filter(w => isWordTestable(w)).length;
+}
+
+/**
+ * 문장에서 단어를 ____로 마스킹.
+ * 정확한 단어 경계 매칭 → 활용형 prefix 매칭 순으로 시도.
+ * @returns {{ masked: string, matched: string }}
+ */
+function maskWordInSentence(sentence, word) {
+  const esc = escapeRegex(word);
+
+  // 1. 정확한 단어 경계 매칭 (대소문자 무시)
+  const exactPattern = new RegExp(
+    `(^|[^a-zA-Z])(${esc})([^a-zA-Z]|$)`, 'i'
+  );
+  const m1 = exactPattern.exec(sentence);
+  if (m1) {
+    const before = sentence.slice(0, m1.index + m1[1].length);
+    const after = sentence.slice(m1.index + m1[1].length + m1[2].length);
+    return { masked: before + '____' + after, matched: m1[2] };
+  }
+
+  // 2. 활용형 prefix 매칭 (e.g. provide → provides, provided)
+  const prefixPattern = new RegExp(
+    `(^|[^a-zA-Z])(${esc}[a-zA-Z]*)([^a-zA-Z]|$)`, 'i'
+  );
+  const m2 = prefixPattern.exec(sentence);
+  if (m2) {
+    const before = sentence.slice(0, m2.index + m2[1].length);
+    const after = sentence.slice(m2.index + m2[1].length + m2[2].length);
+    return { masked: before + '____' + after, matched: m2[2] };
+  }
+
+  // 3. 마지막 수단: 단어를 찾지 못한 경우
+  return { masked: sentence, matched: word };
+}
+
+function buildQuestionFromWord(w) {
+  const { masked, matched } = maskWordInSentence(w.context.sourceText, w.word);
+  return {
+    wordId: w.id,
+    word: w.word,
+    maskedSentence: masked,
+    hintSentence: w.context.translatedText || '',
+    correctAnswer: w.word.toLowerCase().trim(),
+    matchedText: matched,
+  };
+}
+
+/**
+ * 출제 범위에 따라 단어 풀 필터링, 셔플, 문제 생성
+ */
+function buildQuestions({ questionCount, range }) {
+  let pool = [...state.allWords];
+
+  if (range === 'recent30') {
+    pool = [...pool]
+      .sort((a, b) => new Date(b.metadata?.savedAt || 0) - new Date(a.metadata?.savedAt || 0))
+      .slice(0, 30);
+  } else if (range === 'wrong') {
+    const wrongPool = pool.filter(w => w.metadata?.testResults?.some(r => !r.correct));
+    if (wrongPool.length > 0) pool = wrongPool;
+  }
+
+  const eligible = pool.filter(w => isWordTestable(w));
+  const shuffled = fisherYatesShuffle(eligible);
+  const selected = shuffled.slice(0, questionCount);
+  return selected.map(w => buildQuestionFromWord(w));
+}
+
+/**
+ * 정답 검증: base form 또는 실제 매칭된 활용형 모두 수락
+ */
+function validateAnswer(userAnswer, question) {
+  const normalized = userAnswer.trim().toLowerCase();
+  return normalized === question.correctAnswer ||
+         normalized === question.matchedText.toLowerCase();
+}
+
+// --- 설정 화면 ---
+
+async function renderTestSetup() {
+  state.test.phase = 'idle';
+  const settings = await getSettings();
+  const savedCount = settings.testDefaults?.questionCount || 10;
+  const savedRange = settings.testDefaults?.difficulty || 'all';
+  // settings의 difficulty 값 → state.test.config.range 매핑
+  const rangeMap = { 'review-needed': 'all', 'all': 'all', 'recent30': 'recent30', 'wrong': 'wrong' };
+  state.test.config.questionCount = savedCount;
+  state.test.config.range = rangeMap[savedRange] || 'all';
+
+  const eligibleCount = countEligibleWords(state.test.config.range);
+
+  const countOptions = [10, 20, 30].map(n => `
+    <input type="radio" class="test-setup__radio-option" name="testCount" id="testCount${n}" value="${n}" ${state.test.config.questionCount === n ? 'checked' : ''}>
+    <label class="test-setup__radio-label" for="testCount${n}">${n}</label>
+  `).join('');
+
+  const rangeOptions = [
+    { value: 'all', labelKey: 'test_setup_rangeAll' },
+    { value: 'recent30', labelKey: 'test_setup_rangeRecent' },
+    { value: 'wrong', labelKey: 'test_setup_rangeWrong' },
+  ].map(opt => `
+    <input type="radio" class="test-setup__radio-option" name="testRange" id="testRange_${opt.value}" value="${opt.value}" ${state.test.config.range === opt.value ? 'checked' : ''}>
+    <label class="test-setup__radio-label" for="testRange_${opt.value}">${t(opt.labelKey)}</label>
+  `).join('');
+
+  const isDisabled = eligibleCount === 0;
+
   contentArea.innerHTML = `
-    <div class="content__empty">
-      <p>${t('test_placeholder')}</p>
+    <div class="test-setup">
+      <h2 class="test-setup__title">${t('test_setup_title')}</h2>
+
+      <div class="test-setup__section">
+        <div class="test-setup__label">${t('test_setup_questionCount')}</div>
+        <div class="test-setup__radio-group" id="testCountGroup">${countOptions}</div>
+      </div>
+
+      <div class="test-setup__section">
+        <div class="test-setup__label">${t('test_setup_range')}</div>
+        <div class="test-setup__radio-group" id="testRangeGroup">${rangeOptions}</div>
+      </div>
+
+      <div class="test-setup__word-count ${isDisabled ? 'test-setup__word-count--zero' : ''}" id="testEligibleCount">
+        ${t('test_setup_eligibleCount', { count: eligibleCount })}
+      </div>
+
+      ${isDisabled ? `<div class="test-setup__error">${t('test_setup_noEligible')}<br>${t('test_setup_noEligibleDesc')}</div>` : ''}
+
+      <button class="test-setup__start-btn" id="testStartBtn" ${isDisabled ? 'disabled' : ''}>
+        ${t('test_setup_startBtn')}
+      </button>
     </div>
   `;
+
+  bindTestSetupEvents();
+}
+
+function bindTestSetupEvents() {
+  document.getElementById('testCountGroup').addEventListener('change', (e) => {
+    if (e.target.name === 'testCount') {
+      state.test.config.questionCount = parseInt(e.target.value);
+    }
+  });
+
+  document.getElementById('testRangeGroup').addEventListener('change', (e) => {
+    if (e.target.name === 'testRange') {
+      state.test.config.range = e.target.value;
+      const count = countEligibleWords(state.test.config.range);
+      const countEl = document.getElementById('testEligibleCount');
+      const startBtn = document.getElementById('testStartBtn');
+      if (countEl) {
+        countEl.textContent = t('test_setup_eligibleCount', { count });
+        countEl.classList.toggle('test-setup__word-count--zero', count === 0);
+      }
+      if (startBtn) startBtn.disabled = count === 0;
+    }
+  });
+
+  document.getElementById('testStartBtn').addEventListener('click', async () => {
+    const questions = buildQuestions(state.test.config);
+    if (questions.length === 0) return;
+
+    state.test.questions = questions;
+    state.test.currentIndex = 0;
+    state.test.answers = [];
+    state.test.startTime = Date.now();
+    state.test.phase = 'question';
+
+    // 설정 저장
+    await saveTestConfig(state.test.config);
+    renderTestQuestion();
+  });
+}
+
+async function saveTestConfig(config) {
+  const settings = await getSettings();
+  settings.testDefaults = settings.testDefaults || {};
+  settings.testDefaults.questionCount = config.questionCount;
+  settings.testDefaults.difficulty = config.range;
+  await saveSettings(settings);
+}
+
+// --- 문제 화면 ---
+
+function renderTestQuestion() {
+  const q = state.test.questions[state.test.currentIndex];
+  const total = state.test.questions.length;
+  const current = state.test.currentIndex + 1;
+  const progressPct = Math.round(((current - 1) / total) * 100);
+
+  // 마스킹된 문장을 HTML로 렌더링 (____를 styled span으로)
+  const sentenceParts = q.maskedSentence.split('____');
+  const sentenceHtml = sentenceParts.map(p => escapeHtml(p)).join(
+    `<span class="test-question__blank">____</span>`
+  );
+
+  contentArea.innerHTML = `
+    <div class="test-question">
+      <div class="test-progress">
+        <div class="test-progress__bar">
+          <div class="test-progress__fill" style="width: ${progressPct}%"></div>
+        </div>
+        <div class="test-progress__label">${t('test_progress', { current, total })}</div>
+      </div>
+
+      ${q.hintSentence ? `
+        <div>
+          <div class="test-question__hint-label">${t('test_hint_label')}</div>
+          <div class="test-question__hint">${escapeHtml(q.hintSentence)}</div>
+        </div>
+      ` : ''}
+
+      <div class="test-question__divider"></div>
+
+      <div>
+        <div class="test-question__sentence-label">${t('test_question_label')}</div>
+        <p class="test-question__sentence">${sentenceHtml}</p>
+      </div>
+
+      <div class="test-question__input-wrap">
+        <input type="text" class="test-question__input" id="testAnswerInput"
+          placeholder="${t('test_input_placeholder')}" autocomplete="off" autocorrect="off"
+          autocapitalize="off" spellcheck="false">
+        <button class="test-question__submit-btn" id="testSubmitBtn">${t('test_submit')}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('testAnswerInput').focus();
+  bindTestQuestionEvents(q);
+}
+
+function bindTestQuestionEvents(question) {
+  const input = document.getElementById('testAnswerInput');
+  const submitBtn = document.getElementById('testSubmitBtn');
+
+  function handleSubmit() {
+    const userAnswer = input.value;
+    if (userAnswer.trim() === '') return;
+    submitBtn.disabled = true;
+    input.disabled = true;
+
+    const isCorrect = validateAnswer(userAnswer, question);
+
+    // 입력창 색상 피드백
+    input.classList.add(isCorrect ? 'test-question__input--correct' : 'test-question__input--wrong');
+
+    // 답변 기록
+    state.test.answers.push({
+      wordId: question.wordId,
+      word: question.word,
+      correct: isCorrect,
+      userAnswer: userAnswer.trim(),
+      correctAnswer: question.word,
+      matchedText: question.matchedText,
+      maskedSentence: question.maskedSentence,
+      hintSentence: question.hintSentence,
+    });
+
+    state.test.phase = 'feedback';
+    // 짧은 딜레이 후 피드백 화면 전환
+    setTimeout(() => renderTestFeedback(question, userAnswer, isCorrect), 200);
+  }
+
+  submitBtn.addEventListener('click', handleSubmit);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleSubmit();
+  });
+}
+
+// --- 피드백 화면 ---
+
+function renderTestFeedback(question, userAnswer, isCorrect) {
+  const total = state.test.questions.length;
+  const current = state.test.currentIndex + 1;
+  const progressPct = Math.round((current / total) * 100);
+  const isLast = current === total;
+
+  // 마스킹된 문장에서 ____를 정답/오답 강조 span으로 교체
+  const sentenceParts = question.maskedSentence.split('____');
+  let highlightSpan;
+  if (isCorrect) {
+    highlightSpan = `<span class="test-feedback__word--correct">${escapeHtml(question.matchedText)}</span>`;
+  } else {
+    highlightSpan = `<span class="test-feedback__word--wrong">${escapeHtml(userAnswer.trim() || t('test_no_answer'))}</span>`;
+  }
+  const sentenceHtml = sentenceParts.map(p => escapeHtml(p)).join(highlightSpan);
+
+  contentArea.innerHTML = `
+    <div class="test-question">
+      <div class="test-progress">
+        <div class="test-progress__bar">
+          <div class="test-progress__fill" style="width: ${progressPct}%"></div>
+        </div>
+        <div class="test-progress__label">${t('test_progress', { current, total })}</div>
+      </div>
+
+      <div class="test-feedback__result ${isCorrect ? 'test-feedback__result--correct' : 'test-feedback__result--wrong'}">
+        <span class="test-feedback__icon">${isCorrect ? '✓' : '✗'}</span>
+        <span class="test-feedback__label">${isCorrect ? t('test_correct') : t('test_incorrect')}</span>
+      </div>
+
+      ${question.hintSentence ? `
+        <div>
+          <div class="test-question__hint-label">${t('test_hint_label')}</div>
+          <div class="test-question__hint">${escapeHtml(question.hintSentence)}</div>
+        </div>
+      ` : ''}
+
+      <div class="test-question__divider"></div>
+
+      <div>
+        <div class="test-question__sentence-label">${t('test_question_label')}</div>
+        <p class="test-question__sentence">${sentenceHtml}</p>
+      </div>
+
+      ${!isCorrect ? `
+        <div class="test-feedback__correct-answer">
+          <span class="test-feedback__correct-label">${t('test_correct_answer_label')}</span>
+          <span class="test-feedback__correct-word">${escapeHtml(question.word)}</span>
+        </div>
+      ` : ''}
+
+      <button class="test-question__next-btn" id="testNextBtn">
+        ${isLast ? t('test_see_results') : t('test_next')}
+      </button>
+    </div>
+  `;
+
+  const nextBtn = document.getElementById('testNextBtn');
+  nextBtn.addEventListener('click', advanceQuestion);
+  nextBtn.focus();
+}
+
+// --- 진행 ---
+
+async function advanceQuestion() {
+  state.test.currentIndex++;
+
+  if (state.test.currentIndex >= state.test.questions.length) {
+    state.test.phase = 'results';
+    await persistTestResults();
+    renderTestResults();
+  } else {
+    state.test.phase = 'question';
+    renderTestQuestion();
+  }
+}
+
+async function persistTestResults() {
+  const now = new Date().toISOString();
+
+  for (const answer of state.test.answers) {
+    const word = state.allWords.find(w => w.id === answer.wordId);
+    if (!word) continue;
+
+    const newMetadata = {
+      ...word.metadata,
+      testResults: [
+        ...(word.metadata?.testResults || []),
+        { date: now, correct: answer.correct, testType: 'context-match' },
+      ],
+      masteryLevel: computeNewMastery(word.metadata?.masteryLevel, answer.correct),
+      lastReviewed: now,
+      reviewCount: (word.metadata?.reviewCount || 0) + 1,
+    };
+
+    await updateWord(word.id, { metadata: newMetadata });
+    word.metadata = newMetadata; // in-memory 업데이트
+  }
+
+  await updateTestStats(state.test.answers);
+}
+
+// --- 결과 화면 ---
+
+function renderTestResults() {
+  const answers = state.test.answers;
+  const correctCount = answers.filter(a => a.correct).length;
+  const totalCount = answers.length;
+  const scorePercent = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+  const wrongAnswers = answers.filter(a => !a.correct);
+  const elapsed = Date.now() - (state.test.startTime || Date.now());
+
+  const wrongListHtml = wrongAnswers.map(a => `
+    <div class="test-results__wrong-card">
+      <div class="test-results__wrong-word">${escapeHtml(a.word)}</div>
+      <div class="test-results__wrong-row">
+        <span class="test-results__wrong-label">${t('test_your_answer')}</span>
+        <span class="test-results__wrong-val">${escapeHtml(a.userAnswer || t('test_no_answer'))}</span>
+      </div>
+      <div class="test-results__wrong-row">
+        <span class="test-results__wrong-label">${t('test_correct_answer')}</span>
+        <span class="test-results__wrong-val test-results__wrong-correct">${escapeHtml(a.word)}</span>
+      </div>
+      ${a.hintSentence ? `<div class="test-results__wrong-context">${escapeHtml(a.hintSentence)}</div>` : ''}
+    </div>
+  `).join('');
+
+  contentArea.innerHTML = `
+    <div class="test-results">
+      <h2 class="test-results__title">${t('test_results_title')}</h2>
+
+      <div class="test-results__score-card">
+        <div class="test-results__percent">${scorePercent}%</div>
+        <div class="test-results__score">${t('test_results_score', { correct: correctCount, total: totalCount })}</div>
+        <div class="test-results__duration">${t('test_results_duration', { time: formatDuration(elapsed) })}</div>
+      </div>
+
+      ${wrongAnswers.length > 0 ? `
+        <div>
+          <div class="test-results__section-title">${t('test_wrong_section')}</div>
+          ${wrongListHtml}
+        </div>
+      ` : `<div class="test-results__perfect">${t('test_perfect')}</div>`}
+
+      <div class="test-results__actions">
+        <button class="test-results__retry-btn" id="testRetryBtn">${t('test_retry')}</button>
+        <button class="test-results__words-btn" id="testWordsBtn">${t('test_back_to_words')}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('testRetryBtn').addEventListener('click', () => {
+    state.test.phase = 'idle';
+    renderTestSetup();
+  });
+  document.getElementById('testWordsBtn').addEventListener('click', () => {
+    switchTab('words');
+  });
 }
 
 // ============================================================
