@@ -20,6 +20,7 @@
   const STORAGE_KEYS = {
     WORDS: 'vocabulary_words',
     META: 'vocabulary_meta',
+    STATS: 'vocabulary_stats',
     INDEX: 'vocabulary_index'
   };
 
@@ -579,6 +580,7 @@
     const result = await storageGet([
       STORAGE_KEYS.WORDS,
       STORAGE_KEYS.META,
+      STORAGE_KEYS.STATS,
       STORAGE_KEYS.INDEX
     ]);
 
@@ -591,6 +593,12 @@
       languagePairs: [],
       posDistribution: {}
     };
+    const stats = result[STORAGE_KEYS.STATS] || {
+      total: { words: 0, reviews: 0, tests: 0 },
+      dailyActivity: [],
+      progress: { level0: 0, level1: 0, level2: 0, level3: 0, level4: 0, level5: 0 },
+      testStats: { totalTests: 0, averageScore: 0, bestScore: 0, worstScore: 0 }
+    };
     const index = result[STORAGE_KEYS.INDEX] || {};
 
     if (index[key]) {
@@ -602,10 +610,20 @@
     meta.totalWords = words.length;
     meta.lastModified = new Date().toISOString();
 
+    // 일별 활동 업데이트 (주간 활동 차트용)
+    const today = new Date().toISOString().split('T')[0];
+    const dayEntry = stats.dailyActivity.find(d => d.date === today);
+    if (dayEntry) {
+      dayEntry.wordsAdded = (dayEntry.wordsAdded || 0) + 1;
+    } else {
+      stats.dailyActivity.push({ date: today, wordsAdded: 1, wordsReviewed: 0, testsCompleted: 0 });
+    }
+
     await storageSet({
       [STORAGE_KEYS.WORDS]: words,
       [STORAGE_KEYS.INDEX]: index,
-      [STORAGE_KEYS.META]: meta
+      [STORAGE_KEYS.META]: meta,
+      [STORAGE_KEYS.STATS]: stats
     });
 
     return { saved: true };
