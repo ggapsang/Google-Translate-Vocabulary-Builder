@@ -3,6 +3,7 @@
  *
  * Stage 1-2: 탭 전환, 스토리지 연동 테스트, 기본 단어 목록 렌더링.
  * Stage 5-6: 검색(디바운스), 필터/정렬 드롭다운, 상세 뷰, 수정/삭제.
+ * Stage 9: 통계 대시보드 (Chart.js 기반 차트 시각화).
  */
 
 import { getAllWords, getWordById, updateWord, deleteWord, getMeta, getStats, getSettings, saveSettings, updateTestStats } from '../lib/storage.js';
@@ -21,6 +22,9 @@ const state = {
   sortBy: 'newest',
   activeTab: 'stats',
   detailWordId: null,
+
+  // 차트 인스턴스 (Stage 9)
+  charts: {},
 
   // 테스트 세션 상태 (Stage 7-8)
   test: {
@@ -59,6 +63,9 @@ tabButtons.forEach(btn => {
 function switchTab(tabName) {
   state.activeTab = tabName;
   state.detailWordId = null;
+
+  // 통계 탭에서 벗어날 때 차트 정리
+  if (tabName !== 'stats') destroyAllCharts();
 
   // 테스트 탭 진입 시 항상 초기 상태로 리셋
   if (tabName === 'test') {
@@ -347,29 +354,285 @@ async function renderTabContent(tabName) {
   }
 }
 
+// ============================================================
+// Stage 9: 통계 대시보드
+// ============================================================
+
+function destroyAllCharts() {
+  for (const chart of Object.values(state.charts)) {
+    try { chart.destroy(); } catch (_) {}
+  }
+  state.charts = {};
+}
+
 async function renderStatsTab() {
-  const meta = await getMeta();
-  const stats = await getStats();
+  destroyAllCharts();
+
+  const [words, stats] = await Promise.all([getAllWords(), getStats()]);
+
+  // — 숙련도 분포 (allWords 기준)
+  const masteryCount = [0, 0, 0, 0, 0, 0];
+  for (const w of words) {
+    const lv = w.metadata?.masteryLevel ?? 0;
+    masteryCount[lv] = (masteryCount[lv] || 0) + 1;
+  }
+
+  // — 언어 분포 (allWords 기준)
+  const langMap = {};
+  for (const w of words) {
+    const pair = `${w.context?.sourceLanguage ?? '?'}→${w.context?.targetLanguage ?? '?'}`;
+    langMap[pair] = (langMap[pair] || 0) + 1;
+  }
+
+  // — 품사 분포 (allWords 기준)
+  const posMap = {};
+  for (const w of words) {
+    for (const def of (w.definitions || [])) {
+      if (def.pos) posMap[def.pos] = (posMap[def.pos] || 0) + 1;
+    }
+  }
+
+  // — 주간 활동: 최근 7일 날짜 배열
+  const weekDates = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    weekDates.push(d.toISOString().split('T')[0]);
+  }
+
+  // 단어 저장일로 날짜별 카운트
+  const wordsPerDay = {};
+  for (const w of words) {
+    const day = (w.metadata?.savedAt || '').split('T')[0];
+    if (weekDates.includes(day)) wordsPerDay[day] = (wordsPerDay[day] || 0) + 1;
+  }
+
+  // 테스트 완료 수는 stats.dailyActivity 에서
+  const testsPerDay = {};
+  for (const entry of (stats.dailyActivity || [])) {
+    if (weekDates.includes(entry.date)) testsPerDay[entry.date] = entry.testsCompleted || 0;
+  }
+
+  const weekWordsData = weekDates.map(d => wordsPerDay[d] || 0);
+  const weekTestsData = weekDates.map(d => testsPerDay[d] || 0);
+
+  // — 점수
+  const avgScore = stats.testStats?.averageScore ?? 0;
+  const totalTests = stats.testStats?.totalTests ?? stats.total?.tests ?? 0;
+
+  // — 날짜 레이블 (M/D 형식)
+  const locale = getCurrentLang() === 'ko' ? 'ko-KR' : 'en-US';
+  const weekLabels = weekDates.map(d => {
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString(locale, { month: 'numeric', day: 'numeric' });
+  });
+
+  const chartColors = {
+    primary: '#1a73e8',
+    success: '#34a853',
+    warning: '#fbbc04',
+    error: '#ea4335',
+    purple: '#9c27b0',
+    teal: '#009688',
+    mastery: ['#e8eaed', '#fbbc04', '#ff9800', '#34a853', '#1a73e8', '#9c27b0'],
+    langPalette: ['#1a73e8', '#34a853', '#fbbc04', '#ea4335', '#9c27b0', '#009688', '#ff5722'],
+  };
+
+  const masteryLabels = [0, 1, 2, 3, 4, 5].map(i => t(`stats_mastery_${i}`));
 
   contentArea.innerHTML = `
     <div class="stats-overview">
-      <div class="stats-card">
-        <div class="stats-card__label">${t('stats_totalWords')}</div>
-        <div class="stats-card__value">${meta.totalWords}</div>
+
+      <!-- 요약 카드 -->
+      <div class="stats-summary">
+        <div class="stats-card">
+          <div class="stats-card__label">${t('stats_totalWords')}</div>
+          <div class="stats-card__value">${words.length}</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card__label">${t('stats_totalTests')}</div>
+          <div class="stats-card__value">${totalTests}</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card__label">${t('stats_avgScore')}</div>
+          <div class="stats-card__value">${totalTests > 0 ? avgScore : '-'}<span class="stats-card__unit">${totalTests > 0 ? '%' : ''}</span></div>
+        </div>
       </div>
-      <div class="stats-card">
-        <div class="stats-card__label">${t('stats_totalReviews')}</div>
-        <div class="stats-card__value">${stats.total.reviews}</div>
+
+      ${words.length === 0 ? `<p class="stats-empty">${t('stats_noWords')}</p>` : `
+
+      <!-- 숙련도 분포 -->
+      <div class="stats-section">
+        <div class="stats-section__title">${t('stats_section_mastery')}</div>
+        <div class="stats-chart-wrap">
+          <canvas id="chartMastery"></canvas>
+        </div>
       </div>
-      <div class="stats-card">
-        <div class="stats-card__label">${t('stats_totalTests')}</div>
-        <div class="stats-card__value">${stats.total.tests}</div>
+
+      <!-- 주간 활동 -->
+      <div class="stats-section">
+        <div class="stats-section__title">${t('stats_section_activity')}</div>
+        <div class="stats-chart-wrap">
+          <canvas id="chartActivity"></canvas>
+        </div>
       </div>
+
+      <!-- 언어별 분포 -->
+      ${Object.keys(langMap).length > 0 ? `
+      <div class="stats-section">
+        <div class="stats-section__title">${t('stats_section_lang')}</div>
+        <div class="stats-chart-wrap stats-chart-wrap--doughnut">
+          <canvas id="chartLang"></canvas>
+        </div>
+      </div>` : ''}
+
+      <!-- 품사별 분포 -->
+      ${Object.keys(posMap).length > 0 ? `
+      <div class="stats-section">
+        <div class="stats-section__title">${t('stats_section_pos')}</div>
+        <div class="stats-chart-wrap">
+          <canvas id="chartPos"></canvas>
+        </div>
+      </div>` : ''}
+
+      `}
     </div>
-    <p style="text-align:center; color: var(--color-text-secondary); margin-top: 24px;">
-      ${t('stats_chartPlaceholder')}
-    </p>
   `;
+
+  if (words.length === 0) return;
+
+  const chartDefaults = {
+    plugins: { legend: { labels: { font: { size: 11 }, color: '#5f6368', boxWidth: 12 } } },
+  };
+
+  // 숙련도 차트 (수평 막대)
+  const masteryCtx = document.getElementById('chartMastery');
+  if (masteryCtx) {
+    state.charts.mastery = new Chart(masteryCtx, {
+      type: 'bar',
+      data: {
+        labels: masteryLabels,
+        datasets: [{
+          data: masteryCount,
+          backgroundColor: chartColors.mastery,
+          borderRadius: 4,
+          borderSkipped: false,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.parsed.x}${t('stats_words_label')}`,
+            },
+          },
+        },
+        scales: {
+          x: { ticks: { stepSize: 1, font: { size: 11 }, color: '#5f6368' }, grid: { color: '#e0e0e0' } },
+          y: { ticks: { font: { size: 11 }, color: '#5f6368' }, grid: { display: false } },
+        },
+      },
+    });
+  }
+
+  // 주간 활동 차트
+  const activityCtx = document.getElementById('chartActivity');
+  if (activityCtx) {
+    state.charts.activity = new Chart(activityCtx, {
+      type: 'bar',
+      data: {
+        labels: weekLabels,
+        datasets: [
+          {
+            label: t('stats_words_label'),
+            data: weekWordsData,
+            backgroundColor: chartColors.primary,
+            borderRadius: 3,
+          },
+          {
+            label: t('stats_tests_label'),
+            data: weekTestsData,
+            backgroundColor: chartColors.success,
+            borderRadius: 3,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          ...chartDefaults.plugins,
+          legend: { ...chartDefaults.plugins.legend, position: 'bottom' },
+        },
+        scales: {
+          x: { ticks: { font: { size: 11 }, color: '#5f6368' }, grid: { display: false } },
+          y: { ticks: { stepSize: 1, font: { size: 11 }, color: '#5f6368' }, grid: { color: '#e0e0e0' } },
+        },
+      },
+    });
+  }
+
+  // 언어 분포 도넛 차트
+  const langCtx = document.getElementById('chartLang');
+  if (langCtx) {
+    const langEntries = Object.entries(langMap).sort((a, b) => b[1] - a[1]);
+    state.charts.lang = new Chart(langCtx, {
+      type: 'doughnut',
+      data: {
+        labels: langEntries.map(([k]) => k),
+        datasets: [{
+          data: langEntries.map(([, v]) => v),
+          backgroundColor: chartColors.langPalette.slice(0, langEntries.length),
+          borderWidth: 2,
+          borderColor: '#ffffff',
+        }],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          ...chartDefaults.plugins,
+          legend: { ...chartDefaults.plugins.legend, position: 'bottom' },
+        },
+        cutout: '60%',
+      },
+    });
+  }
+
+  // 품사 분포 수평 막대 차트
+  const posCtx = document.getElementById('chartPos');
+  if (posCtx) {
+    const posEntries = Object.entries(posMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    state.charts.pos = new Chart(posCtx, {
+      type: 'bar',
+      data: {
+        labels: posEntries.map(([k]) => k),
+        datasets: [{
+          data: posEntries.map(([, v]) => v),
+          backgroundColor: chartColors.langPalette.slice(0, posEntries.length),
+          borderRadius: 4,
+          borderSkipped: false,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.parsed.x}${t('stats_words_label')}`,
+            },
+          },
+        },
+        scales: {
+          x: { ticks: { stepSize: 1, font: { size: 11 }, color: '#5f6368' }, grid: { color: '#e0e0e0' } },
+          y: { ticks: { font: { size: 11 }, color: '#5f6368' }, grid: { display: false } },
+        },
+      },
+    });
+  }
 }
 
 async function renderWordsTab() {

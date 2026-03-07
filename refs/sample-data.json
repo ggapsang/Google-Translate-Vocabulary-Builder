@@ -1,0 +1,1225 @@
+{
+  "_readme": [
+    "30개 샘플 단어 데이터 — Stage 1~8 검증용",
+    "",
+    "== DevTools에서 주입하는 방법 ==",
+    "1. Chrome에서 확장 프로그램 로드 후 Side Panel 열기",
+    "2. 확장 배경 페이지 콘솔(background service worker) 또는 side panel의 개발자 도구 열기",
+    "3. 아래 코드 실행:",
+    "   fetch(chrome.runtime.getURL('refs/sample-data.json'))",
+    "     .then(r => r.json())",
+    "     .then(d => chrome.storage.local.set({",
+    "       vocabulary_words: d.vocabulary_words,",
+    "       vocabulary_stats: d.vocabulary_stats,",
+    "       vocabulary_meta: d.vocabulary_meta,",
+    "       vocabulary_index: d.vocabulary_index",
+    "     }))",
+    "     .then(() => console.log('샘플 데이터 로드 완료!'))",
+    "",
+    "== 또는 직접 붙여넣기 방법 ==",
+    "Side Panel DevTools Console에서 sample-data.json의 내용을 복사한 후:",
+    "  chrome.storage.local.set({ vocabulary_words: [...], ... })",
+    "",
+    "== 데이터 구성 ==",
+    "- 27개 en→ko, 3개 en→ja",
+    "- masteryLevel 0~5 골고루 분포",
+    "- savedAt 최근 14일로 분산 (주간 활동 차트 검증용)",
+    "- testResults 일부 포함"
+  ],
+  "vocabulary_meta": {
+    "version": "0.1.0",
+    "totalWords": 30,
+    "lastBackup": null,
+    "lastSync": null,
+    "languagePairs": [],
+    "posDistribution": {}
+  },
+  "vocabulary_stats": {
+    "total": { "words": 30, "reviews": 45, "tests": 5 },
+    "dailyActivity": [
+      { "date": "2026-02-22", "wordsAdded": 3, "wordsReviewed": 5, "testsCompleted": 1 },
+      { "date": "2026-02-23", "wordsAdded": 4, "wordsReviewed": 8, "testsCompleted": 0 },
+      { "date": "2026-02-24", "wordsAdded": 2, "wordsReviewed": 3, "testsCompleted": 1 },
+      { "date": "2026-02-25", "wordsAdded": 5, "wordsReviewed": 10, "testsCompleted": 0 },
+      { "date": "2026-02-26", "wordsAdded": 4, "wordsReviewed": 7, "testsCompleted": 2 },
+      { "date": "2026-02-27", "wordsAdded": 6, "wordsReviewed": 12, "testsCompleted": 1 },
+      { "date": "2026-03-01", "wordsAdded": 6, "wordsReviewed": 0, "testsCompleted": 0 }
+    ],
+    "progress": { "level0": 5, "level1": 6, "level2": 7, "level3": 6, "level4": 4, "level5": 2 },
+    "testStats": {
+      "totalTests": 5,
+      "averageScore": 74,
+      "bestScore": 90,
+      "worstScore": 55
+    }
+  },
+  "vocabulary_index": {
+    "invoke": "1740614400000-invoke",
+    "autonomous": "1740700800000-autonomous",
+    "mitigate": "1740787200000-mitigate",
+    "subsequent": "1740873600000-subsequent",
+    "prerequisite": "1740960000000-prerequisite",
+    "conspicuous": "1741046400000-conspicuous",
+    "discrepancy": "1741132800000-discrepancy",
+    "inevitable": "1741219200000-inevitable",
+    "rhetoric": "1741305600000-rhetoric",
+    "lucrative": "1741392000000-lucrative",
+    "versatile": "1741478400000-versatile",
+    "scrutinize": "1741564800000-scrutinize",
+    "plausible": "1741651200000-plausible",
+    "elaborate": "1741737600000-elaborate",
+    "accumulate": "1741824000000-accumulate",
+    "ambiguous": "1741910400000-ambiguous",
+    "prevalent": "1741996800000-prevalent",
+    "acknowledge": "1742083200000-acknowledge",
+    "adequate": "1742169600000-adequate",
+    "implement": "1742256000000-implement",
+    "substantial": "1742342400000-substantial",
+    "facilitate": "1742428800000-facilitate",
+    "arbitrary": "1742515200000-arbitrary",
+    "catastrophic": "1742601600000-catastrophic",
+    "credibility": "1742688000000-credibility",
+    "deteriorate": "1742774400000-deteriorate",
+    "embody": "1742860800000-embody",
+    "unprecedented": "1742947200000-unprecedented",
+    "resilient": "1743033600000-resilient",
+    "sustainable": "1743120000000-sustainable"
+  },
+  "vocabulary_words": [
+    {
+      "id": "1740614400000-invoke",
+      "word": "invoke",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "발동하다, 요청하다",
+              "english": "cite or appeal to (someone or something) as an authority for an action or in support of an argument",
+              "synonyms": ["cite", "appeal to", "call upon", "evoke"],
+              "example": "The lawyer invoked the Fifth Amendment during the trial."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The emergency committee decided to invoke special powers to deal with the crisis.",
+        "translatedText": "비상위원회는 위기를 처리하기 위해 특별 권한을 발동하기로 결정했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-22T09:00:00Z",
+        "reviewCount": 3,
+        "lastReviewed": "2026-02-28T09:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 3,
+        "testResults": [
+          { "date": "2026-02-24T09:00:00Z", "correct": true, "testType": "context-match" },
+          { "date": "2026-02-27T09:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": ["법률", "동사"]
+    },
+    {
+      "id": "1740700800000-autonomous",
+      "word": "autonomous",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "자율적인, 독립적인",
+              "english": "having the freedom to act independently",
+              "synonyms": ["independent", "self-governing", "self-sufficient"],
+              "example": "The region gained autonomous status after years of negotiation."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The company developed an autonomous vehicle that can navigate city streets without human input.",
+        "translatedText": "그 회사는 사람의 개입 없이 도시 거리를 주행할 수 있는 자율주행 차량을 개발했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-22T11:00:00Z",
+        "reviewCount": 2,
+        "lastReviewed": "2026-02-26T11:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 2,
+        "testResults": [
+          { "date": "2026-02-24T10:00:00Z", "correct": false, "testType": "context-match" }
+        ]
+      },
+      "userNote": "자율주행 관련 기사에서 자주 등장",
+      "tags": ["기술", "형용사"]
+    },
+    {
+      "id": "1740787200000-mitigate",
+      "word": "mitigate",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "완화하다, 경감하다",
+              "english": "make less severe, serious, or painful",
+              "synonyms": ["alleviate", "reduce", "lessen", "ease"],
+              "example": "Steps were taken to mitigate the environmental damage."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The government introduced several measures to mitigate the economic impact of the pandemic.",
+        "translatedText": "정부는 팬데믹의 경제적 영향을 완화하기 위한 여러 조치를 도입했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-22T14:00:00Z",
+        "reviewCount": 4,
+        "lastReviewed": "2026-03-01T08:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 4,
+        "testResults": [
+          { "date": "2026-02-25T09:00:00Z", "correct": true, "testType": "context-match" },
+          { "date": "2026-02-28T09:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": ["경제", "동사"]
+    },
+    {
+      "id": "1740873600000-subsequent",
+      "word": "subsequent",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "그 이후의, 차후의",
+              "english": "coming after or following",
+              "synonyms": ["following", "ensuing", "later", "successive"],
+              "example": "Subsequent events proved his theory correct."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The subsequent investigation revealed several inconsistencies in the original report.",
+        "translatedText": "이후 조사에서 원본 보고서의 여러 불일치가 드러났다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-23T09:00:00Z",
+        "reviewCount": 1,
+        "lastReviewed": "2026-02-25T09:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 1,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": []
+    },
+    {
+      "id": "1740960000000-prerequisite",
+      "word": "prerequisite",
+      "definitions": [
+        {
+          "pos": "명사",
+          "meanings": [
+            {
+              "korean": "전제 조건, 필수 조건",
+              "english": "a thing that is required as a prior condition for something else to happen",
+              "synonyms": ["requirement", "precondition", "necessity", "condition"],
+              "example": "A degree is a prerequisite for this position."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "A strong foundation in mathematics is a prerequisite for studying advanced physics.",
+        "translatedText": "수학의 탄탄한 기초는 고급 물리학을 공부하기 위한 전제 조건이다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-23T11:00:00Z",
+        "reviewCount": 0,
+        "lastReviewed": null,
+        "nextReview": null,
+        "masteryLevel": 0,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["학문", "명사"]
+    },
+    {
+      "id": "1741046400000-conspicuous",
+      "word": "conspicuous",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "눈에 띄는, 두드러진",
+              "english": "standing out so as to be clearly visible",
+              "synonyms": ["noticeable", "obvious", "prominent", "visible"],
+              "example": "The red car was conspicuous in the parking lot full of gray vehicles."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Her bright red coat made her conspicuous in the otherwise uniformly dressed crowd.",
+        "translatedText": "그녀의 밝은 빨간 코트는 획일적으로 차려입은 군중 속에서 그녀를 눈에 띄게 만들었다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-23T14:00:00Z",
+        "reviewCount": 2,
+        "lastReviewed": "2026-02-27T10:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 2,
+        "testResults": [
+          { "date": "2026-02-27T10:00:00Z", "correct": false, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": []
+    },
+    {
+      "id": "1741132800000-discrepancy",
+      "word": "discrepancy",
+      "definitions": [
+        {
+          "pos": "명사",
+          "meanings": [
+            {
+              "korean": "불일치, 차이",
+              "english": "a lack of compatibility or similarity between two or more facts",
+              "synonyms": ["inconsistency", "difference", "disparity", "variance"],
+              "example": "There was a discrepancy between the two sets of figures."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Auditors found a significant discrepancy between the company's reported earnings and actual revenue.",
+        "translatedText": "감사관들은 회사의 보고된 수익과 실제 매출 사이에서 상당한 불일치를 발견했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-24T09:00:00Z",
+        "reviewCount": 3,
+        "lastReviewed": "2026-03-01T09:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 3,
+        "testResults": [
+          { "date": "2026-02-26T09:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "회계/감사 문서에서 자주 등장",
+      "tags": ["비즈니스", "명사"]
+    },
+    {
+      "id": "1741219200000-inevitable",
+      "word": "inevitable",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "불가피한, 피할 수 없는",
+              "english": "certain to happen; unavoidable",
+              "synonyms": ["unavoidable", "inescapable", "certain", "destined"],
+              "example": "Conflict seemed inevitable given the tense political situation."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Given the mounting financial pressures, the company's restructuring seemed inevitable.",
+        "translatedText": "늘어나는 재정적 압박을 감안할 때, 회사의 구조조정은 불가피해 보였다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-24T11:00:00Z",
+        "reviewCount": 5,
+        "lastReviewed": "2026-03-01T10:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 5,
+        "testResults": [
+          { "date": "2026-02-25T10:00:00Z", "correct": true, "testType": "context-match" },
+          { "date": "2026-02-28T10:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": []
+    },
+    {
+      "id": "1741305600000-rhetoric",
+      "word": "rhetoric",
+      "definitions": [
+        {
+          "pos": "명사",
+          "meanings": [
+            {
+              "korean": "수사학, 미사여구",
+              "english": "the art of effective or persuasive speaking or writing; language designed to have a persuasive or impressive effect",
+              "synonyms": ["oratory", "eloquence", "discourse", "bombast"],
+              "example": "His speech was full of political rhetoric but lacked substance."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The candidate's powerful rhetoric inspired voters, but critics argued it lacked concrete policy proposals.",
+        "translatedText": "후보자의 강력한 수사학은 유권자들에게 영감을 주었지만, 비평가들은 구체적인 정책 제안이 부족하다고 주장했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-24T14:00:00Z",
+        "reviewCount": 1,
+        "lastReviewed": "2026-02-26T14:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 1,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["정치", "명사"]
+    },
+    {
+      "id": "1741392000000-lucrative",
+      "word": "lucrative",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "수익성 있는, 돈이 되는",
+              "english": "producing a great deal of profit",
+              "synonyms": ["profitable", "remunerative", "gainful", "rewarding"],
+              "example": "She left a lucrative career in finance to start her own business."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The startup secured a lucrative contract with a major tech company that guaranteed its growth for years.",
+        "translatedText": "그 스타트업은 수년간의 성장을 보장하는 대형 기술 기업과의 수익성 높은 계약을 체결했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-25T09:00:00Z",
+        "reviewCount": 0,
+        "lastReviewed": null,
+        "nextReview": null,
+        "masteryLevel": 0,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["비즈니스", "형용사"]
+    },
+    {
+      "id": "1741478400000-versatile",
+      "word": "versatile",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "다재다능한, 다용도의",
+              "english": "able to adapt or be adapted to many different functions or activities",
+              "synonyms": ["adaptable", "flexible", "multipurpose", "resourceful"],
+              "example": "A versatile athlete who excelled in both sprinting and long-distance running."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Python is a versatile programming language that can be used for web development, data science, and automation.",
+        "translatedText": "파이썬은 웹 개발, 데이터 과학, 자동화에 사용할 수 있는 다재다능한 프로그래밍 언어이다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-25T11:00:00Z",
+        "reviewCount": 3,
+        "lastReviewed": "2026-02-28T11:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 3,
+        "testResults": [
+          { "date": "2026-02-27T11:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": ["기술", "형용사"]
+    },
+    {
+      "id": "1741564800000-scrutinize",
+      "word": "scrutinize",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "면밀히 조사하다, 자세히 검토하다",
+              "english": "examine or inspect closely and thoroughly",
+              "synonyms": ["examine", "inspect", "analyze", "study"],
+              "example": "The committee scrutinized every line of the proposed budget."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Regulators will scrutinize the merger to ensure it does not create an unfair monopoly in the market.",
+        "translatedText": "규제 당국은 합병이 시장에서 불공정한 독점을 만들지 않도록 면밀히 조사할 것이다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-25T14:00:00Z",
+        "reviewCount": 2,
+        "lastReviewed": "2026-03-01T11:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 2,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["법률", "동사"]
+    },
+    {
+      "id": "1741651200000-plausible",
+      "word": "plausible",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "그럴듯한, 타당해 보이는",
+              "english": "(of an argument or statement) seeming reasonable or probable",
+              "synonyms": ["credible", "reasonable", "believable", "convincing"],
+              "example": "The alibi was plausible enough to avoid suspicion."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The scientist offered a plausible explanation for the unexpected results observed in the experiment.",
+        "translatedText": "과학자는 실험에서 관찰된 예상치 못한 결과에 대해 그럴듯한 설명을 제시했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-26T09:00:00Z",
+        "reviewCount": 4,
+        "lastReviewed": "2026-03-01T12:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 4,
+        "testResults": [
+          { "date": "2026-02-28T12:00:00Z", "correct": true, "testType": "context-match" },
+          { "date": "2026-03-01T12:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": []
+    },
+    {
+      "id": "1741737600000-elaborate",
+      "word": "elaborate",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "정교한, 복잡한",
+              "english": "involving many carefully arranged parts or details; detailed and complicated",
+              "synonyms": ["detailed", "complex", "intricate", "sophisticated"],
+              "example": "The architect presented an elaborate design for the new museum."
+            }
+          ]
+        },
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "상세히 설명하다",
+              "english": "develop or present (a theory, policy, or system) in detail",
+              "synonyms": ["expand on", "detail", "explain", "clarify"],
+              "example": "Could you elaborate on your proposal?"
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The CEO refused to elaborate on the company's future plans during the press conference.",
+        "translatedText": "CEO는 기자 회견에서 회사의 미래 계획에 대해 자세히 설명하기를 거부했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-26T11:00:00Z",
+        "reviewCount": 1,
+        "lastReviewed": "2026-02-28T13:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 1,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": []
+    },
+    {
+      "id": "1741824000000-accumulate",
+      "word": "accumulate",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "축적하다, 쌓다",
+              "english": "gather together or acquire an increasing number or quantity of",
+              "synonyms": ["amass", "collect", "gather", "stockpile"],
+              "example": "She accumulated vast knowledge through decades of research."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The researcher has accumulated extensive data on climate patterns over the past thirty years.",
+        "translatedText": "연구자는 지난 30년간 기후 패턴에 대한 광범위한 데이터를 축적해 왔다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-26T14:00:00Z",
+        "reviewCount": 0,
+        "lastReviewed": null,
+        "nextReview": null,
+        "masteryLevel": 0,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["과학", "동사"]
+    },
+    {
+      "id": "1741910400000-ambiguous",
+      "word": "ambiguous",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "모호한, 불분명한",
+              "english": "open to more than one interpretation; not having one obvious meaning",
+              "synonyms": ["vague", "unclear", "equivocal", "indefinite"],
+              "example": "The contract contained several ambiguous clauses."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The government's ambiguous statement on the policy left citizens uncertain about what changes to expect.",
+        "translatedText": "정책에 대한 정부의 모호한 성명은 시민들에게 어떤 변화를 기대해야 할지 불확실하게 만들었다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-26T16:00:00Z",
+        "reviewCount": 3,
+        "lastReviewed": "2026-03-01T13:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 3,
+        "testResults": [
+          { "date": "2026-02-28T14:00:00Z", "correct": false, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": []
+    },
+    {
+      "id": "1741996800000-prevalent",
+      "word": "prevalent",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "만연한, 널리 퍼진",
+              "english": "widespread in a particular area at a particular time",
+              "synonyms": ["widespread", "common", "rife", "endemic"],
+              "example": "Malnutrition is prevalent in regions affected by drought."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Smartphone addiction has become increasingly prevalent among teenagers across the globe.",
+        "translatedText": "스마트폰 중독이 전 세계 청소년들 사이에서 점점 더 만연해지고 있다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T09:00:00Z",
+        "reviewCount": 2,
+        "lastReviewed": "2026-03-01T14:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 2,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": []
+    },
+    {
+      "id": "1742083200000-acknowledge",
+      "word": "acknowledge",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "인정하다, 승인하다",
+              "english": "accept or admit the existence or truth of",
+              "synonyms": ["admit", "recognize", "accept", "concede"],
+              "example": "The company acknowledged its responsibility for the data breach."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The CEO publicly acknowledged the company's failure to meet environmental standards during the annual report.",
+        "translatedText": "CEO는 연례 보고서에서 환경 기준을 충족하지 못한 회사의 실패를 공개적으로 인정했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T10:00:00Z",
+        "reviewCount": 5,
+        "lastReviewed": "2026-03-01T15:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 5,
+        "testResults": [
+          { "date": "2026-02-28T15:00:00Z", "correct": true, "testType": "context-match" },
+          { "date": "2026-03-01T15:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": ["비즈니스", "동사"]
+    },
+    {
+      "id": "1742169600000-adequate",
+      "word": "adequate",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "충분한, 적절한",
+              "english": "satisfactory or acceptable in quality or quantity",
+              "synonyms": ["sufficient", "enough", "satisfactory", "acceptable"],
+              "example": "The shelter provided adequate protection from the rain."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The hospital did not have adequate supplies to handle the surge in patients during the outbreak.",
+        "translatedText": "병원은 발병 기간 동안 환자 급증을 처리하기에 충분한 물자를 갖추지 못했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T11:00:00Z",
+        "reviewCount": 1,
+        "lastReviewed": "2026-03-01T16:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 1,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": []
+    },
+    {
+      "id": "1742256000000-implement",
+      "word": "implement",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "시행하다, 구현하다",
+              "english": "put (a decision, plan, agreement, etc.) into effect",
+              "synonyms": ["execute", "apply", "carry out", "enforce"],
+              "example": "The school decided to implement a new curriculum this year."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The city council voted to implement stricter recycling policies to reduce landfill waste.",
+        "translatedText": "시의회는 매립 폐기물을 줄이기 위해 더 엄격한 재활용 정책을 시행하기로 투표했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T13:00:00Z",
+        "reviewCount": 3,
+        "lastReviewed": "2026-03-01T17:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 3,
+        "testResults": [
+          { "date": "2026-03-01T17:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": ["정치", "동사"]
+    },
+    {
+      "id": "1742342400000-substantial",
+      "word": "substantial",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "상당한, 실질적인",
+              "english": "of considerable importance, size, or worth",
+              "synonyms": ["considerable", "significant", "sizeable", "major"],
+              "example": "The project required a substantial investment."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The renovation project required a substantial investment of both time and financial resources.",
+        "translatedText": "리모델링 프로젝트는 시간과 재정 자원 모두에서 상당한 투자를 필요로 했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T14:00:00Z",
+        "reviewCount": 2,
+        "lastReviewed": "2026-03-01T18:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 2,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["비즈니스", "형용사"]
+    },
+    {
+      "id": "1742428800000-facilitate",
+      "word": "facilitate",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "촉진하다, 용이하게 하다",
+              "english": "make (an action or process) easy or easier",
+              "synonyms": ["ease", "assist", "enable", "promote"],
+              "example": "The new software was designed to facilitate team collaboration."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The new digital platform was introduced to facilitate communication between remote teams across different time zones.",
+        "translatedText": "새로운 디지털 플랫폼은 서로 다른 시간대의 원격 팀 간 소통을 촉진하기 위해 도입되었다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T15:00:00Z",
+        "reviewCount": 4,
+        "lastReviewed": "2026-03-01T19:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 4,
+        "testResults": [
+          { "date": "2026-02-28T16:00:00Z", "correct": true, "testType": "context-match" },
+          { "date": "2026-03-01T19:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": ["기술", "동사"]
+    },
+    {
+      "id": "1742515200000-arbitrary",
+      "word": "arbitrary",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "임의적인, 독단적인",
+              "english": "based on random choice or personal whim, rather than any reason or system",
+              "synonyms": ["random", "capricious", "whimsical", "discretionary"],
+              "example": "The punishment seemed arbitrary and unfair."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Critics argued that the judge's decision was arbitrary and lacked a clear legal basis.",
+        "translatedText": "비평가들은 판사의 결정이 임의적이며 명확한 법적 근거가 없다고 주장했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T16:00:00Z",
+        "reviewCount": 0,
+        "lastReviewed": null,
+        "nextReview": null,
+        "masteryLevel": 0,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["법률", "형용사"]
+    },
+    {
+      "id": "1742601600000-catastrophic",
+      "word": "catastrophic",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "재앙적인, 파국적인",
+              "english": "involving or causing sudden great damage or suffering",
+              "synonyms": ["disastrous", "devastating", "calamitous", "ruinous"],
+              "example": "The oil spill had catastrophic consequences for the local fishing industry."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Scientists warn that without urgent action, climate change could have catastrophic consequences for ecosystems worldwide.",
+        "translatedText": "과학자들은 긴급한 조치가 없으면 기후 변화가 전 세계 생태계에 재앙적인 결과를 초래할 수 있다고 경고한다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T17:00:00Z",
+        "reviewCount": 1,
+        "lastReviewed": "2026-03-01T20:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 1,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["환경", "형용사"]
+    },
+    {
+      "id": "1742688000000-credibility",
+      "word": "credibility",
+      "definitions": [
+        {
+          "pos": "명사",
+          "meanings": [
+            {
+              "korean": "신뢰성, 신빙성",
+              "english": "the quality of being trusted and believed in",
+              "synonyms": ["trustworthiness", "reliability", "integrity", "authenticity"],
+              "example": "The scandal severely damaged the politician's credibility."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The researcher's credibility was called into question after the retraction of a landmark study.",
+        "translatedText": "획기적인 연구가 철회된 후 연구자의 신뢰성에 의문이 제기되었다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T18:00:00Z",
+        "reviewCount": 2,
+        "lastReviewed": "2026-03-01T21:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 2,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["명사"]
+    },
+    {
+      "id": "1742774400000-deteriorate",
+      "word": "deteriorate",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "악화되다, 저하되다",
+              "english": "become progressively worse",
+              "synonyms": ["worsen", "decline", "degrade", "decay"],
+              "example": "The patient's condition began to deteriorate rapidly."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Relations between the two countries began to deteriorate after the diplomatic incident at the border.",
+        "translatedText": "국경에서의 외교적 사건 이후 두 나라 간의 관계가 악화되기 시작했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-03-01T09:00:00Z",
+        "reviewCount": 0,
+        "lastReviewed": null,
+        "nextReview": null,
+        "masteryLevel": 0,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["동사"]
+    },
+    {
+      "id": "1742860800000-embody",
+      "word": "embody",
+      "definitions": [
+        {
+          "pos": "동사",
+          "meanings": [
+            {
+              "korean": "구현하다, 구체화하다",
+              "english": "be an expression of or give a tangible or visible form to (an idea, quality, or feeling)",
+              "synonyms": ["represent", "exemplify", "personify", "express"],
+              "example": "The new law embodies the principles of fairness and equality."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The championship trophy embodies decades of hard work, sacrifice, and dedication from the entire team.",
+        "translatedText": "챔피언십 트로피는 팀 전체의 수십 년에 걸친 노력, 희생, 헌신을 구현한다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-03-01T10:00:00Z",
+        "reviewCount": 3,
+        "lastReviewed": "2026-03-07T10:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 3,
+        "testResults": [
+          { "date": "2026-03-05T10:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": ["동사"]
+    },
+    {
+      "id": "1742947200000-unprecedented",
+      "word": "unprecedented",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "전례 없는",
+              "english": "never done or known before",
+              "synonyms": ["unparalleled", "novel", "extraordinary", "unique"],
+              "example": "The discovery was unprecedented in the history of science."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The pandemic caused unprecedented disruption to global supply chains, affecting industries worldwide.",
+        "translatedText": "팬데믹은 전 세계 산업에 영향을 미치며 글로벌 공급망에 전례 없는 혼란을 야기했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-03-01T11:00:00Z",
+        "reviewCount": 1,
+        "lastReviewed": "2026-03-06T11:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 1,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["형용사"]
+    },
+    {
+      "id": "1743033600000-resilient",
+      "word": "resilient",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "회복력 있는, 탄력적인",
+              "english": "able to withstand or recover quickly from difficult conditions",
+              "synonyms": ["tough", "adaptable", "hardy", "flexible"],
+              "example": "A resilient economy can bounce back from unexpected shocks."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The coastal community proved remarkably resilient in the aftermath of the devastating hurricane.",
+        "translatedText": "해안 마을은 파괴적인 허리케인이 지나간 후에도 놀라울 정도로 강한 회복력을 보여 주었다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-03-01T12:00:00Z",
+        "reviewCount": 4,
+        "lastReviewed": "2026-03-07T12:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 4,
+        "testResults": [
+          { "date": "2026-03-04T12:00:00Z", "correct": true, "testType": "context-match" },
+          { "date": "2026-03-07T12:00:00Z", "correct": true, "testType": "context-match" }
+        ]
+      },
+      "userNote": "",
+      "tags": ["환경", "형용사"]
+    },
+    {
+      "id": "1743120000000-sustainable",
+      "word": "sustainable",
+      "definitions": [
+        {
+          "pos": "형용사",
+          "meanings": [
+            {
+              "korean": "지속 가능한",
+              "english": "able to be maintained at a certain rate or level; conserving an ecological balance",
+              "synonyms": ["maintainable", "viable", "eco-friendly", "renewable"],
+              "example": "The company committed to sustainable business practices."
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The city launched an ambitious plan to transition to 100% sustainable energy sources by 2040.",
+        "translatedText": "이 도시는 2040년까지 100% 지속 가능한 에너지원으로 전환하는 야심 찬 계획을 시작했다.",
+        "sourceLanguage": "en",
+        "targetLanguage": "ko"
+      },
+      "metadata": {
+        "savedAt": "2026-03-01T13:00:00Z",
+        "reviewCount": 2,
+        "lastReviewed": "2026-03-07T13:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 2,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["환경", "형용사"]
+    },
+    {
+      "id": "1741478400000-ja-navigate",
+      "word": "navigate",
+      "definitions": [
+        {
+          "pos": "動詞",
+          "meanings": [
+            {
+              "korean": "항해하다, 길을 찾다",
+              "english": "plan and direct the route or course of a ship, aircraft, or other form of transport",
+              "synonyms": ["steer", "pilot", "guide", "direct"],
+              "example": "古代の船乗りは星を使って大洋を航海した。"
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "Ancient sailors used the stars to navigate across vast oceans without modern instruments.",
+        "translatedText": "古代の船乗りは現代の機器なしに、星を使って広大な海を航海した。",
+        "sourceLanguage": "en",
+        "targetLanguage": "ja"
+      },
+      "metadata": {
+        "savedAt": "2026-02-25T10:00:00Z",
+        "reviewCount": 1,
+        "lastReviewed": "2026-02-27T10:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 1,
+        "testResults": []
+      },
+      "userNote": "일본어 번역 연습용",
+      "tags": ["일본어", "동사"]
+    },
+    {
+      "id": "1741564800000-ja-consequence",
+      "word": "consequence",
+      "definitions": [
+        {
+          "pos": "名詞",
+          "meanings": [
+            {
+              "korean": "결과, 영향",
+              "english": "a result or effect of an action or condition",
+              "synonyms": ["result", "outcome", "effect", "repercussion"],
+              "example": "行動には必ず結果が伴う。"
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The consequence of ignoring early warning signs can be far more severe than addressing problems proactively.",
+        "translatedText": "早期警告サインを無視することの結果は、問題を積極的に対処するよりもはるかに深刻になる可能性がある。",
+        "sourceLanguage": "en",
+        "targetLanguage": "ja"
+      },
+      "metadata": {
+        "savedAt": "2026-02-26T10:00:00Z",
+        "reviewCount": 0,
+        "lastReviewed": null,
+        "nextReview": null,
+        "masteryLevel": 0,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["일본어", "명사"]
+    },
+    {
+      "id": "1741651200000-ja-innovative",
+      "word": "innovative",
+      "definitions": [
+        {
+          "pos": "形容詞",
+          "meanings": [
+            {
+              "korean": "혁신적인",
+              "english": "featuring new methods; advanced and original",
+              "synonyms": ["creative", "original", "inventive", "pioneering"],
+              "example": "この企業は革新的な製品を世界に届けている。"
+            }
+          ]
+        }
+      ],
+      "context": {
+        "sourceText": "The startup's innovative approach to renewable energy storage attracted significant investor attention.",
+        "translatedText": "再生可能エネルギー貯蔵に対するそのスタートアップの革新的なアプローチは、投資家の大きな注目を集めた。",
+        "sourceLanguage": "en",
+        "targetLanguage": "ja"
+      },
+      "metadata": {
+        "savedAt": "2026-02-27T10:00:00Z",
+        "reviewCount": 2,
+        "lastReviewed": "2026-03-01T10:00:00Z",
+        "nextReview": null,
+        "masteryLevel": 2,
+        "testResults": []
+      },
+      "userNote": "",
+      "tags": ["일본어", "형용사"]
+    }
+  ]
+}
