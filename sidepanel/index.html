@@ -62,6 +62,8 @@
       </div>
     </div>
     <button class="toolbar__btn" id="exportBtn" data-i18n-aria="sidepanel_export" aria-label="내보내기" data-i18n="sidepanel_export">내보내기</button>
+    <button class="toolbar__btn" id="importBtn" data-i18n="import_btn">가져오기</button>
+    <input type="file" id="importFileInput" accept=".csv" style="display:none">
   </div>
 
   <!-- 콘텐츠 영역 -->
@@ -93,6 +95,17 @@
           </select>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Import 오버레이 -->
+  <div class="settings-overlay" id="importOverlay" style="display: none;">
+    <div class="settings-panel">
+      <div class="settings-panel__header">
+        <h2 data-i18n="import_title">CSV 가져오기</h2>
+        <button class="settings-panel__close" id="importClose">&times;</button>
+      </div>
+      <div class="settings-panel__body" id="importBody"></div>
     </div>
   </div>
 

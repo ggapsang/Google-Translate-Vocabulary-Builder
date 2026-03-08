@@ -130,5 +130,23 @@
   "content_savedWord": "Saved: {word}",
   "content_saveFailed": "Failed to save word.",
   "settings_title": "설정",
-  "settings_language": "언어"
+  "settings_language": "언어",
+
+  "export_empty": "내보낼 단어가 없습니다.",
+  "export_success": "CSV 다운로드 완료! ({count}개 단어)",
+  "export_filename": "vocabulary",
+
+  "import_btn": "가져오기",
+  "import_title": "CSV 가져오기",
+  "import_found": "{valid}개 단어 발견",
+  "import_invalid": "({invalid}개 오류 제외)",
+  "import_strategy": "이미 있는 단어 처리",
+  "import_skip": "건너뛰기 (기존 유지)",
+  "import_overwrite": "덮어쓰기 (새 데이터로 교체)",
+  "import_cancel": "취소",
+  "import_confirm": "가져오기",
+  "import_success": "{count}개 단어 가져오기 완료",
+  "import_skipped": "({skipped}개 건너뜀)",
+  "import_error": "CSV 파일을 읽을 수 없습니다.",
+  "import_empty": "가져올 단어가 없습니다."
 }

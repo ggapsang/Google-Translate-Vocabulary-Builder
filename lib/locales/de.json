@@ -138,5 +138,23 @@
   "content_saveFailed": "Speichern fehlgeschlagen.",
 
   "settings_title": "Einstellungen",
-  "settings_language": "Sprache"
+  "settings_language": "Sprache",
+
+  "export_empty": "Keine Wörter zum Exportieren.",
+  "export_success": "CSV heruntergeladen! ({count} Wörter)",
+  "export_filename": "vocabulary",
+
+  "import_btn": "Importieren",
+  "import_title": "CSV importieren",
+  "import_found": "{valid} Wörter gefunden",
+  "import_invalid": "({invalid} Fehler ausgeschlossen)",
+  "import_strategy": "Doppelte Wörter",
+  "import_skip": "Überspringen (vorhandene behalten)",
+  "import_overwrite": "Überschreiben (durch neue Daten ersetzen)",
+  "import_cancel": "Abbrechen",
+  "import_confirm": "Importieren",
+  "import_success": "{count} Wörter importiert",
+  "import_skipped": "({skipped} übersprungen)",
+  "import_error": "CSV-Datei konnte nicht gelesen werden.",
+  "import_empty": "Keine Wörter zum Importieren."
 }

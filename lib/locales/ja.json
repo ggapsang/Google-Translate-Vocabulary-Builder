@@ -138,5 +138,23 @@
   "content_saveFailed": "保存に失敗しました。",
 
   "settings_title": "設定",
-  "settings_language": "言語"
+  "settings_language": "言語",
+
+  "export_empty": "エクスポートする単語がありません。",
+  "export_success": "CSVをダウンロードしました！（{count}語）",
+  "export_filename": "vocabulary",
+
+  "import_btn": "インポート",
+  "import_title": "CSV インポート",
+  "import_found": "{valid}語を検出",
+  "import_invalid": "（{invalid}件のエラーを除外）",
+  "import_strategy": "重複単語の処理",
+  "import_skip": "スキップ（既存を保持）",
+  "import_overwrite": "上書き（新しいデータに置換）",
+  "import_cancel": "キャンセル",
+  "import_confirm": "インポート",
+  "import_success": "{count}語をインポートしました",
+  "import_skipped": "（{skipped}件スキップ）",
+  "import_error": "CSVファイルを読み込めませんでした。",
+  "import_empty": "インポートする単語がありません。"
 }

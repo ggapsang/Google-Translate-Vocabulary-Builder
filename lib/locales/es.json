@@ -138,5 +138,23 @@
   "content_saveFailed": "Error al guardar la palabra.",
 
   "settings_title": "Configuración",
-  "settings_language": "Idioma"
+  "settings_language": "Idioma",
+
+  "export_empty": "No hay palabras para exportar.",
+  "export_success": "¡CSV descargado! ({count} palabras)",
+  "export_filename": "vocabulary",
+
+  "import_btn": "Importar",
+  "import_title": "Importar CSV",
+  "import_found": "{valid} palabras encontradas",
+  "import_invalid": "({invalid} errores excluidos)",
+  "import_strategy": "Palabras duplicadas",
+  "import_skip": "Omitir (conservar existentes)",
+  "import_overwrite": "Sobrescribir (reemplazar con nuevos datos)",
+  "import_cancel": "Cancelar",
+  "import_confirm": "Importar",
+  "import_success": "{count} palabras importadas",
+  "import_skipped": "({skipped} omitidas)",
+  "import_error": "No se pudo leer el archivo CSV.",
+  "import_empty": "No hay palabras para importar."
 }

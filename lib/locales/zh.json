@@ -138,5 +138,23 @@
   "content_saveFailed": "保存失败。",
 
   "settings_title": "设置",
-  "settings_language": "语言"
+  "settings_language": "语言",
+
+  "export_empty": "没有可导出的单词。",
+  "export_success": "CSV 下载完成！（{count} 个单词）",
+  "export_filename": "vocabulary",
+
+  "import_btn": "导入",
+  "import_title": "导入 CSV",
+  "import_found": "发现 {valid} 个单词",
+  "import_invalid": "（已排除 {invalid} 个错误）",
+  "import_strategy": "重复单词处理",
+  "import_skip": "跳过（保留现有）",
+  "import_overwrite": "覆盖（替换为新数据）",
+  "import_cancel": "取消",
+  "import_confirm": "导入",
+  "import_success": "已导入 {count} 个单词",
+  "import_skipped": "（已跳过 {skipped} 个）",
+  "import_error": "无法读取 CSV 文件。",
+  "import_empty": "没有可导入的单词。"
 }

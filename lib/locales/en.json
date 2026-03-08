@@ -138,5 +138,23 @@
   "content_saveFailed": "Failed to save word.",
 
   "settings_title": "Settings",
-  "settings_language": "Language"
+  "settings_language": "Language",
+
+  "export_empty": "No words to export.",
+  "export_success": "CSV downloaded! ({count} words)",
+  "export_filename": "vocabulary",
+
+  "import_btn": "Import",
+  "import_title": "Import CSV",
+  "import_found": "{valid} words found",
+  "import_invalid": "({invalid} errors excluded)",
+  "import_strategy": "Duplicate words",
+  "import_skip": "Skip (keep existing)",
+  "import_overwrite": "Overwrite (replace with new data)",
+  "import_cancel": "Cancel",
+  "import_confirm": "Import",
+  "import_success": "{count} words imported",
+  "import_skipped": "({skipped} skipped)",
+  "import_error": "Could not read CSV file.",
+  "import_empty": "No words to import."
 }

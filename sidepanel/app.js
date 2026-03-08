@@ -6,7 +6,7 @@
  * Stage 9: 통계 대시보드 (Chart.js 기반 차트 시각화).
  */
 
-import { getAllWords, getWordById, updateWord, deleteWord, getMeta, getStats, getSettings, saveSettings, updateTestStats } from '../lib/storage.js';
+import { getAllWords, getWordById, addWord, updateWord, deleteWord, getMeta, getStats, getSettings, saveSettings, updateTestStats } from '../lib/storage.js';
 import { initI18n, t, setLanguage, getCurrentLang, getLocaleCode, onLanguageChange, translatePage } from '../lib/i18n.js';
 
 // ============================================================
@@ -49,6 +49,10 @@ const filterBtn = document.getElementById('filterBtn');
 const filterDropdown = document.getElementById('filterDropdown');
 const sortBtn = document.getElementById('sortBtn');
 const sortDropdown = document.getElementById('sortDropdown');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const importFileInput = document.getElementById('importFileInput');
+const importOverlay = document.getElementById('importOverlay');
 
 // ============================================================
 // 탭 네비게이션
@@ -335,6 +339,225 @@ sortDropdown.addEventListener('click', (e) => {
   state.detailWordId = null;
   renderWordsTab();
 });
+
+exportBtn.addEventListener('click', () => {
+  exportWordsAsCSV();
+});
+
+importBtn.addEventListener('click', () => {
+  importFileInput.click();
+});
+
+importFileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  importFileInput.value = '';
+  try {
+    const text = await file.text();
+    const { valid, invalidCount } = parseImportCSV(text);
+    if (!valid.length) {
+      showDetailToast(t('import_empty'));
+      return;
+    }
+    showImportOverlay(valid, invalidCount);
+  } catch {
+    showDetailToast(t('import_error'));
+  }
+});
+
+// ============================================================
+// Stage 10: CSV Export
+// ============================================================
+
+async function exportWordsAsCSV() {
+  const words = state.filteredWords;
+
+  if (!words.length) {
+    showDetailToast(t('export_empty'));
+    return;
+  }
+
+  const BOM = '\uFEFF';
+  const header = 'word,pos,meaning,definition,synonyms,example,saved_at,review_count,mastery,source_text,translated_text';
+
+  const rows = words.map(w => {
+    const defs     = w.definitions || [];
+    const pos      = defs.map(d => d.pos || '').join('|');
+    const korean   = defs.flatMap(d => d.meanings?.map(m => m.korean) || []).filter(Boolean).join('|');
+    const english  = defs.flatMap(d => d.meanings?.map(m => m.english) || []).filter(Boolean).join('|');
+    const synonyms = defs.flatMap(d => d.meanings?.flatMap(m => m.synonyms || []) || []).filter(Boolean).join('|');
+    const example  = defs.flatMap(d => d.meanings?.map(m => m.example) || []).filter(Boolean)[0] || '';
+
+    return [
+      w.word,
+      pos,
+      korean,
+      english,
+      synonyms,
+      example,
+      w.metadata?.savedAt?.split('T')[0] || '',
+      w.metadata?.reviewCount ?? 0,
+      w.metadata?.masteryLevel ?? 0,
+      w.context?.sourceText || '',
+      w.context?.translatedText || '',
+    ].map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',');
+  });
+
+  const csv = BOM + [header, ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().split('T')[0];
+  a.href = url;
+  a.download = `${t('export_filename')}_${date}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showDetailToast(t('export_success', { count: words.length }));
+}
+
+// ============================================================
+// Stage 10: CSV Import
+// ============================================================
+
+let _importPending = null;
+
+function parseCSVRow(line) {
+  const fields = [];
+  let i = 0;
+  while (i < line.length) {
+    if (line[i] === '"') {
+      let field = '';
+      i++;
+      while (i < line.length) {
+        if (line[i] === '"' && line[i + 1] === '"') { field += '"'; i += 2; }
+        else if (line[i] === '"') { i++; break; }
+        else { field += line[i++]; }
+      }
+      fields.push(field);
+      if (line[i] === ',') i++;
+    } else {
+      const end = line.indexOf(',', i);
+      if (end === -1) { fields.push(line.slice(i)); break; }
+      fields.push(line.slice(i, end));
+      i = end + 1;
+    }
+  }
+  return fields;
+}
+
+function parseImportCSV(text) {
+  const bom = '\uFEFF';
+  const normalized = (text.startsWith(bom) ? text.slice(1) : text)
+    .replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalized.split('\n');
+
+  const valid = [];
+  let invalidCount = 0;
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const row = parseCSVRow(line);
+    const word = row[0]?.trim();
+    if (!word) { invalidCount++; continue; }
+
+    valid.push({
+      id: `${Date.now() + i}-${word}`,
+      word,
+      definitions: [{
+        pos: row[1] || '',
+        meanings: [{
+          korean: row[2] || '',
+          english: row[3] || '',
+          synonyms: row[4] ? row[4].split('|').map(s => s.trim()).filter(Boolean) : [],
+          example: row[5] || ''
+        }]
+      }],
+      context: {
+        sourceText: row[9] || '',
+        translatedText: row[10] || '',
+        sourceLanguage: 'en',
+        targetLanguage: 'ko'
+      },
+      metadata: {
+        savedAt: row[6] || new Date().toISOString(),
+        reviewCount: parseInt(row[7]) || 0,
+        masteryLevel: Math.min(5, Math.max(0, parseInt(row[8]) || 0)),
+        lastReviewed: null,
+        testResults: []
+      },
+      tags: []
+    });
+  }
+
+  return { valid, invalidCount };
+}
+
+function showImportOverlay(words, invalidCount) {
+  _importPending = words;
+  const body = document.getElementById('importBody');
+  body.innerHTML = `
+    <p class="import-summary">
+      ${t('import_found', { valid: words.length })}
+      ${invalidCount > 0 ? ` <span>${t('import_invalid', { invalid: invalidCount })}</span>` : ''}
+    </p>
+    <p class="import-strategy-label">${t('import_strategy')}</p>
+    <div class="import-strategy">
+      <label><input type="radio" name="importStrategy" value="skip" checked> ${t('import_skip')}</label>
+      <label><input type="radio" name="importStrategy" value="overwrite"> ${t('import_overwrite')}</label>
+    </div>
+    <div class="import-actions">
+      <button class="toolbar__btn" id="importCancelBtn">${t('import_cancel')}</button>
+      <button class="toolbar__btn" id="importConfirmBtn">${t('import_confirm')}</button>
+    </div>
+  `;
+  document.getElementById('importCancelBtn').addEventListener('click', closeImportOverlay);
+  document.getElementById('importConfirmBtn').addEventListener('click', async () => {
+    const strategy = body.querySelector('input[name="importStrategy"]:checked').value;
+    const pending = _importPending;
+    closeImportOverlay();
+    await doImport(pending, strategy);
+  });
+  importOverlay.style.display = 'flex';
+}
+
+function closeImportOverlay() {
+  importOverlay.style.display = 'none';
+  _importPending = null;
+}
+
+async function doImport(words, strategy) {
+  const existingWords = await getAllWords();
+  const existingMap = new Map(existingWords.map(w => [w.word.toLowerCase(), w]));
+
+  let added = 0;
+  let skipped = 0;
+
+  for (const w of words) {
+    const key = w.word.toLowerCase();
+    if (existingMap.has(key)) {
+      if (strategy === 'overwrite') {
+        await deleteWord(existingMap.get(key).id);
+        await addWord(w);
+        added++;
+      } else {
+        skipped++;
+      }
+    } else {
+      await addWord(w);
+      added++;
+    }
+  }
+
+  state.allWords = await getAllWords();
+  applyFiltersAndSort();
+  if (state.activeTab === 'words') renderWordsTab();
+
+  let msg = t('import_success', { count: added });
+  if (skipped > 0) msg += ' ' + t('import_skipped', { skipped });
+  showDetailToast(msg);
+}
 
 // ============================================================
 // 탭 콘텐츠 렌더링
@@ -1471,6 +1694,11 @@ function showDetailToast(message) {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
+    // Import 오버레이 닫기
+    if (importOverlay.style.display !== 'none') {
+      closeImportOverlay();
+      return;
+    }
     // 설정 오버레이 닫기
     const overlay = document.getElementById('settingsOverlay');
     if (overlay.style.display !== 'none') {
@@ -1516,6 +1744,12 @@ settingsOverlay.addEventListener('click', (e) => {
     settingsOverlay.style.display = 'none';
   }
 });
+
+importOverlay.addEventListener('click', (e) => {
+  if (e.target === importOverlay) closeImportOverlay();
+});
+
+document.getElementById('importClose').addEventListener('click', closeImportOverlay);
 
 languageSelect.addEventListener('change', async (e) => {
   const newLang = e.target.value;

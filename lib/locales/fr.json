@@ -138,5 +138,23 @@
   "content_saveFailed": "Échec de l'enregistrement.",
 
   "settings_title": "Paramètres",
-  "settings_language": "Langue"
+  "settings_language": "Langue",
+
+  "export_empty": "Aucun mot à exporter.",
+  "export_success": "CSV téléchargé ! ({count} mots)",
+  "export_filename": "vocabulary",
+
+  "import_btn": "Importer",
+  "import_title": "Importer CSV",
+  "import_found": "{valid} mots trouvés",
+  "import_invalid": "({invalid} erreurs exclues)",
+  "import_strategy": "Mots en double",
+  "import_skip": "Ignorer (conserver les existants)",
+  "import_overwrite": "Écraser (remplacer par les nouvelles données)",
+  "import_cancel": "Annuler",
+  "import_confirm": "Importer",
+  "import_success": "{count} mots importés",
+  "import_skipped": "({skipped} ignorés)",
+  "import_error": "Impossible de lire le fichier CSV.",
+  "import_empty": "Aucun mot à importer."
 }
